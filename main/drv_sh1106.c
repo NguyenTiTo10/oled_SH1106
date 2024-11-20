@@ -12,8 +12,10 @@
 #define I2C_MASTER_FREQ_HZ 400000    // I2C clock frequency
 #define OLED_I2C_ADDR 0x3C           // SH1106 I2C address
 
-esp_err_t i2c_master_init(void) {
-    i2c_config_t conf = {
+esp_err_t i2c_master_init(void) 
+{
+    i2c_config_t conf = 
+    {
         .mode = I2C_MODE_MASTER,
         .sda_io_num = I2C_MASTER_SDA_IO,
         .scl_io_num = I2C_MASTER_SCL_IO,
@@ -25,7 +27,8 @@ esp_err_t i2c_master_init(void) {
     return i2c_driver_install(I2C_MASTER_NUM, conf.mode, 0, 0, 0);
 }
 
-esp_err_t sh1106_send_command(uint8_t command) {
+esp_err_t sh1106_send_command(uint8_t command) 
+{
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
     i2c_master_write_byte(cmd, (OLED_I2C_ADDR << 1) | I2C_MASTER_WRITE, true);
@@ -37,7 +40,8 @@ esp_err_t sh1106_send_command(uint8_t command) {
     return ret;
 }
 
-esp_err_t sh1106_send_data(uint8_t data) {
+esp_err_t sh1106_send_data(uint8_t data) 
+{
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
     i2c_master_write_byte(cmd, (OLED_I2C_ADDR << 1) | I2C_MASTER_WRITE, true);
@@ -49,8 +53,10 @@ esp_err_t sh1106_send_data(uint8_t data) {
     return ret;
 }
 
-void sh1106_init(void) {
-    uint8_t init_cmds[] = {
+void sh1106_init(void) 
+{
+    uint8_t init_cmds[] = 
+    {
         0xAE,       // Display OFF
         0xD5, 0x80, // Set display clock divide ratio/oscillator frequency
         0xA8, 0x3F, // Set multiplex ratio to 1/64 duty
@@ -72,7 +78,8 @@ void sh1106_init(void) {
     }
 }
 
-void sh1106_clear(void) {
+void sh1106_clear(void) 
+{
     for (uint8_t page = 0; page < 8; page++) {
         sh1106_send_command(0xB0 + page); // Set page address
         sh1106_send_command(0x00); // Set lower column address
@@ -83,7 +90,8 @@ void sh1106_clear(void) {
     }
 }
 
-void sh1106_draw_char(uint8_t x, uint8_t y, char c) {
+void sh1106_draw_char(uint8_t x, uint8_t y, char c) 
+{
     if (x >= 128 || y >= 8) {
         return; // Prevent out-of-bounds drawing
     }
@@ -97,8 +105,10 @@ void sh1106_draw_char(uint8_t x, uint8_t y, char c) {
     }
 }
 
-void sh1106_draw_string(uint8_t x, uint8_t y, const char *str) {
-    while (*str) {
+void sh1106_draw_string(uint8_t x, uint8_t y, const char *str) 
+{
+    while (*str) 
+    {
         sh1106_draw_char(x, y, *str++);
         x += 8; // Move to next character position
         if (x >= 128) { // Wrap to the next line if necessary
@@ -111,8 +121,10 @@ void sh1106_draw_string(uint8_t x, uint8_t y, const char *str) {
     }
 }
 
-void sh1106_fill(uint8_t pattern) {
-    for (uint8_t page = 0; page < 8; page++) {
+void sh1106_fill(uint8_t pattern) 
+{
+    for (uint8_t page = 0; page < 8; page++) 
+    {
         sh1106_send_command(0xB0 + page); // Set page address
         sh1106_send_command(0x00); // Set lower column address
         sh1106_send_command(0x10); // Set higher column address
