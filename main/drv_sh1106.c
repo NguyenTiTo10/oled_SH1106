@@ -27,6 +27,17 @@ esp_err_t i2c_master_init(void)
     return i2c_driver_install(I2C_MASTER_NUM, conf.mode, 0, 0, 0);          // Install the I2C driver
 }
 
+
+/**
+ * @brief
+ * Purpose:
+ *      Sending command to SH1106    
+ * Key Details:
+ *      OLED_I2C_ADDR << 1: Shifts the OLED address left to add the read/write bit. 
+ *      The I2C protocol combines address and mode into one byte.
+ *      0x00: Control byte for command transmission. The D/C# bit determines whether the next byte is a command (0) or data (1).
+ *      i2c_master_cmd_begin: Executes the queued I2C operations within a 1-second timeout.     
+ */
 esp_err_t sh1106_send_command(uint8_t command) 
 {
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();       // Creates a new I2C command link
@@ -41,6 +52,7 @@ esp_err_t sh1106_send_command(uint8_t command)
     i2c_cmd_link_delete(cmd);                           // Deletes the I2C command link
     return ret;                                         // Returns the status of the transaction
 }
+
 
 esp_err_t sh1106_send_data(uint8_t data) 
 {
