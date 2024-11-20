@@ -26,12 +26,17 @@ void app_main(void) {
     sh1106_draw_string(0, 1, "Multiline OK!");
     sh1106_draw_string(0, 2, "Another line.!");
 
-    // vTaskDelay(2000 / portTICK_PERIOD_MS);
+    vTaskDelay(3000 / portTICK_PERIOD_MS);
 
     // // Fill the display with a pattern
     // sh1106_fill(0xAA); // Example pattern
     // vTaskDelay(1000 / portTICK_PERIOD_MS);
 
-    // // Clear the display again
-    // sh1106_clear();
+
+    // Clear the display again
+    sh1106_clear();
+
+    sh1106_draw_string(0, 5, "Welcome to Viet Nam");
+
+
 }

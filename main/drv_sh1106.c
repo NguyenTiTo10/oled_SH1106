@@ -141,12 +141,14 @@ void sh1106_draw_char(uint8_t x, uint8_t y, char c)
 
 void sh1106_draw_string(uint8_t x, uint8_t y, const char *str) 
 {
+    uint8_t start_x = x + 2; // Adjust start position for SH1106 offset
+
     while (*str) 
     {
-        sh1106_draw_char(x, y, *str++);
-        x += 8; // Move to next character position
-        if (x >= 128) { // Wrap to the next line if necessary
-            x = 0;
+        sh1106_draw_char(start_x, y, *str++);
+        start_x += 8; // Move to the next character position
+        if (start_x >= 128) { // Wrap to the next line if necessary
+            start_x = 2; // Reset to adjusted start
             y++;
             if (y >= 8) {
                 break; // Stop if out of vertical bounds
