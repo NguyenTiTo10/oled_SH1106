@@ -127,14 +127,17 @@ void sh1106_draw_char(uint8_t x, uint8_t y, char c)
         return; // Prevent out-of-bounds drawing
     }
 
-    sh1106_send_command(0xB0 + y);          // Set page address
-    sh1106_send_command(0x00 + (x & 0x0F)); // Set lower column address
-    sh1106_send_command(0x10 + (x >> 4));   // Set higher column address
+    uint8_t adjusted_x = x + 2; // Adjust by 2 to account for the SH1106 column offset
+
+    sh1106_send_command(0xB0 + y);            // Set page address
+    sh1106_send_command(0x00 + (adjusted_x & 0x0F)); // Set lower column address
+    sh1106_send_command(0x10 + (adjusted_x >> 4));   // Set higher column address
 
     for (int i = 0; i < 8; i++) {
         sh1106_send_data(font8x8_basic_tr[(uint8_t)c][i]);
     }
 }
+
 
 void sh1106_draw_string(uint8_t x, uint8_t y, const char *str) 
 {
