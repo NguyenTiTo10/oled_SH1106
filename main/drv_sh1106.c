@@ -16,28 +16,30 @@ esp_err_t i2c_master_init(void)
 {
     i2c_config_t conf = 
     {
-        .mode = I2C_MODE_MASTER,
+        .mode = I2C_MODE_MASTER,      
         .sda_io_num = I2C_MASTER_SDA_IO,
         .scl_io_num = I2C_MASTER_SCL_IO,
         .sda_pullup_en = GPIO_PULLUP_ENABLE,
         .scl_pullup_en = GPIO_PULLUP_ENABLE,
         .master.clk_speed = I2C_MASTER_FREQ_HZ,
     };
-    i2c_param_config(I2C_MASTER_NUM, &conf);
-    return i2c_driver_install(I2C_MASTER_NUM, conf.mode, 0, 0, 0);
+    i2c_param_config(I2C_MASTER_NUM, &conf);                                // Apply the configuration         
+    return i2c_driver_install(I2C_MASTER_NUM, conf.mode, 0, 0, 0);          // Install the I2C driver
 }
 
 esp_err_t sh1106_send_command(uint8_t command) 
 {
-    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-    i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, (OLED_I2C_ADDR << 1) | I2C_MASTER_WRITE, true);
-    i2c_master_write_byte(cmd, 0x00, true); // Co = 0, D/C# = 0 for command
-    i2c_master_write_byte(cmd, command, true);
-    i2c_master_stop(cmd);
-    esp_err_t ret = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, 1000 / portTICK_PERIOD_MS);
-    i2c_cmd_link_delete(cmd);
-    return ret;
+    i2c_cmd_handle_t cmd = i2c_cmd_link_create();       // Creates a new I2C command link
+    i2c_master_start(cmd);                              // Starts an I2C transmission
+    i2c_master_write_byte(cmd, (OLED_I2C_ADDR << 1) | I2C_MASTER_WRITE, true); 
+                                                        // Sends OLED address with WRITE mode
+    i2c_master_write_byte(cmd, 0x00, true);             // Control byte: Co = 0 (single byte), D/C# = 0 (command mode)
+    i2c_master_write_byte(cmd, command, true);          // Send the actual command
+    i2c_master_stop(cmd);                               // Ends the I2C transmission
+    esp_err_t ret = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, 1000 / portTICK_PERIOD_MS); 
+                                                        // Executes the I2C transaction
+    i2c_cmd_link_delete(cmd);                           // Deletes the I2C command link
+    return ret;                                         // Returns the status of the transaction
 }
 
 esp_err_t sh1106_send_data(uint8_t data) 
