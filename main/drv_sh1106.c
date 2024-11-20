@@ -77,7 +77,12 @@ esp_err_t sh1106_send_data(uint8_t data)
 }
 
 
-
+/**
+ * Purpose:
+ *      The commands configure the OLED's hardware parameters, 
+ *          including contrast, display offset, and scan direction.
+ *      0xAF: Turns the display ON after configuration.
+ */
 void sh1106_init(void) 
 {
     uint8_t init_cmds[] = 
@@ -105,7 +110,8 @@ void sh1106_init(void)
 
 void sh1106_clear(void) 
 {
-    for (uint8_t page = 0; page < 8; page++) {
+    for (uint8_t page = 0; page < 8; page++) 
+    {
         sh1106_send_command(0xB0 + page); // Set page address
         sh1106_send_command(0x00); // Set lower column address
         sh1106_send_command(0x10); // Set higher column address

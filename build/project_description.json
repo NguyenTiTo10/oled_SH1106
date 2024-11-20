@@ -1,7 +1,7 @@
 {
     "version":            "1.1",
     "project_name":       "oled_sh1106",
-    "project_version":    "e269d26-dirty",
+    "project_version":    "0193dd2-dirty",
     "project_path":       "E:/Projects/ESP_IDF/Component/oled_sh1106",
     "idf_path":           "C:/Users/MTC-TTM/esp/v5.2.3/esp-idf",
     "build_dir":          "E:/Projects/ESP_IDF/Component/oled_sh1106/build",
