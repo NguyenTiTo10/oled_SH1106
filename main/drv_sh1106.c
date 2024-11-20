@@ -54,18 +54,29 @@ esp_err_t sh1106_send_command(uint8_t command)
 }
 
 
+/**
+ * @brief
+ *  Purpose
+ *      This function is used for transferring display content.
+ *  Difference from sh1106_send_command:
+ *      The control byte is 0x40, indicating that the following byte(s) are data.s
+ */
 esp_err_t sh1106_send_data(uint8_t data) 
 {
-    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-    i2c_master_start(cmd);
-    i2c_master_write_byte(cmd, (OLED_I2C_ADDR << 1) | I2C_MASTER_WRITE, true);
-    i2c_master_write_byte(cmd, 0x40, true); // Co = 0, D/C# = 1 for data
-    i2c_master_write_byte(cmd, data, true);
-    i2c_master_stop(cmd);
-    esp_err_t ret = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, 1000 / portTICK_PERIOD_MS);
-    i2c_cmd_link_delete(cmd);
-    return ret;
+    i2c_cmd_handle_t cmd = i2c_cmd_link_create();       // Create I2C command link
+    i2c_master_start(cmd);                              // Start I2C transmission
+    i2c_master_write_byte(cmd, (OLED_I2C_ADDR << 1) | I2C_MASTER_WRITE, true); 
+                                                        // OLED address in write mode
+    i2c_master_write_byte(cmd, 0x40, true);             // Control byte: Co = 0, D/C# = 1 (data mode)
+    i2c_master_write_byte(cmd, data, true);             // Send the data byte
+    i2c_master_stop(cmd);                               // Stop I2C transmission
+    esp_err_t ret = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, 1000 / portTICK_PERIOD_MS); 
+                                                        // Execute the I2C transaction
+    i2c_cmd_link_delete(cmd);                           // Delete the command link
+    return ret;                                         // Return status
 }
+
+
 
 void sh1106_init(void) 
 {
