@@ -5,6 +5,13 @@
 #include "sh1106_driver.h"
 #include "font8x8_basic.h"
 
+// I2C configuration
+#define I2C_MASTER_SCL_IO 22         // GPIO for SCL
+#define I2C_MASTER_SDA_IO 21         // GPIO for SDA
+#define I2C_MASTER_NUM I2C_NUM_0     // I2C port number
+#define I2C_MASTER_FREQ_HZ 400000    // I2C clock frequency
+#define OLED_I2C_ADDR 0x3C           // SH1106 I2C address
+
 esp_err_t i2c_master_init(void) {
     i2c_config_t conf = {
         .mode = I2C_MODE_MASTER,
