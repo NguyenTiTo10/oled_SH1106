@@ -1,7 +1,7 @@
 {
     "version":            "1.1",
     "project_name":       "oled_sh1106",
-    "project_version":    "1",
+    "project_version":    "69c4712-dirty",
     "project_path":       "E:/Projects/ESP_IDF/Component/oled_sh1106",
     "idf_path":           "C:/Users/MTC-TTM/esp/v5.2.3/esp-idf",
     "build_dir":          "E:/Projects/ESP_IDF/Component/oled_sh1106/build",
@@ -805,7 +805,7 @@
             "managed_reqs": [],
             "managed_priv_reqs": [],
             "file": "E:/Projects/ESP_IDF/Component/oled_sh1106/build/esp-idf/main/libmain.a",
-            "sources": [ "E:/Projects/ESP_IDF/Component/oled_sh1106/main/sh1106_driver.c", "E:/Projects/ESP_IDF/Component/oled_sh1106/main/main.c" ],
+            "sources": [ "E:/Projects/ESP_IDF/Component/oled_sh1106/main/drv_sh1106.c", "E:/Projects/ESP_IDF/Component/oled_sh1106/main/main.c" ],
             "include_dirs": [ "." ]
         },
         "mbedtls": {

@@ -1,7 +1,7 @@
 // File: main/test_sh1106.c
 
 #include <stdio.h>
-#include "sh1106_driver.h"
+#include "drv_sh1106.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 

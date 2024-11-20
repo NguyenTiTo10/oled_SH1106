@@ -1,2 +1,2 @@
-idf_component_register(SRCS "sh1106_driver.c" "main.c"
+idf_component_register(SRCS "drv_sh1106.c" "main.c"
                     INCLUDE_DIRS ".")
