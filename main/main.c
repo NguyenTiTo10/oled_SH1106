@@ -21,9 +21,9 @@ void app_main(void)
 
     vTaskDelay(3000 / portTICK_PERIOD_MS);
 
-    // Fill the display with a pattern
+    // // Fill the display with a pattern
     // drv_sh1106_fill_screen(0xAA); // Example pattern
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
+    // vTaskDelay(1000 / portTICK_PERIOD_MS);
 
 
     // // Clear the display again

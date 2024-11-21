@@ -20,7 +20,7 @@ static esp_err_t i2c_master_init(void);
 static esp_err_t drv_sh1106_send_command(uint8_t command);
 static esp_err_t drv_sh1106_write_data(uint8_t data);
 
-esp_err_t i2c_master_init(void) 
+static esp_err_t i2c_master_init(void) 
 {
     i2c_config_t conf = 
     {
@@ -36,17 +36,7 @@ esp_err_t i2c_master_init(void)
 }
 
 
-/**
- * @brief
- * Purpose:
- *      Sending command to SH1106    
- * Key Details:
- *      OLED_I2C_ADDR << 1: Shifts the OLED address left to add the read/write bit. 
- *      The I2C protocol combines address and mode into one byte.
- *      0x00: Control byte for command transmission. The D/C# bit determines whether the next byte is a command (0) or data (1).
- *      i2c_master_cmd_begin: Executes the queued I2C operations within a 1-second timeout.     
- */
-esp_err_t drv_sh1106_send_command(uint8_t command) 
+static esp_err_t drv_sh1106_send_command(uint8_t command) 
 {
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();       // Creates a new I2C command link
     i2c_master_start(cmd);                              // Starts an I2C transmission
@@ -62,14 +52,7 @@ esp_err_t drv_sh1106_send_command(uint8_t command)
 }
 
 
-/**
- * @brief
- *  Purpose
- *      This function is used for transferring display content.
- *  Difference from drv_sh1106_send_command:
- *      The control byte is 0x40, indicating that the following byte(s) are data.s
- */
-esp_err_t drv_sh1106_write_data(uint8_t data) 
+static esp_err_t drv_sh1106_write_data(uint8_t data) 
 {
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();       // Create I2C command link
     i2c_master_start(cmd);                              // Start I2C transmission
@@ -85,12 +68,6 @@ esp_err_t drv_sh1106_write_data(uint8_t data)
 }
 
 
-/**
- * Purpose:
- *      The commands configure the OLED's hardware parameters, 
- *          including contrast, display offset, and scan direction.
- *      0xAF: Turns the display ON after configuration.
- */
 void drv_sh1106_init(void) 
 {
     // Initialize I2C and the SH1106 OLED display
@@ -132,13 +109,13 @@ void drv_sh1106_clear_screen(void)
         drv_sh1106_send_command(0xB0 + page); // Set page address
         drv_sh1106_send_command(0x00); // Set lower column address
         drv_sh1106_send_command(0x10); // Set higher column address
-        for (uint8_t col = 0; col < 132; col++) {
+        for (uint8_t col = 0; col < 128; col++) {
             drv_sh1106_write_data(0x00); // Clear column data
         }
     }
 }
 
-void drv_sh1106_write_char(uint8_t x, uint8_t y, char c) 
+static void drv_sh1106_write_char(uint8_t x, uint8_t y, char c) 
 {
     if (x >= 128 || y >= 8) 
         return; // Prevent out-of-bounds drawing
@@ -181,7 +158,7 @@ void drv_sh1106_write_string(uint8_t x, uint8_t y, const char *str)
 //         drv_sh1106_send_command(0xB0 + page); // Set page address
 //         drv_sh1106_send_command(0x00); // Set lower column address
 //         drv_sh1106_send_command(0x10); // Set higher column address
-//         for (uint8_t col = 0; col < 132; col++) 
+//         for (uint8_t col = 0; col < 128; col++) 
 //         {
 //             drv_sh1106_write_data(pattern); // Fill column with pattern
 //         }
