@@ -28,15 +28,15 @@ void app_main(void) {
 
     vTaskDelay(3000 / portTICK_PERIOD_MS);
 
-    // // Fill the display with a pattern
-    // sh1106_fill(0xAA); // Example pattern
-    // vTaskDelay(1000 / portTICK_PERIOD_MS);
+    // Fill the display with a pattern
+    // drv_sh1106_fill_screen(0xAA); // Example pattern
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
 
 
-    // Clear the display again
-    drv_sh1106_clear_screen();
+    // // Clear the display again
+    // drv_sh1106_clear_screen();
 
-    drv_sh1106_write_string(0, 5, "Welcome to Viet Nam");
+    // drv_sh1106_write_string(0, 5, "Welcome to Viet Nam");
 
 
 }

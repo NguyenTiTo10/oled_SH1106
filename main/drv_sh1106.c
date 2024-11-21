@@ -157,16 +157,16 @@ void drv_sh1106_write_string(uint8_t x, uint8_t y, const char *str)
     }
 }
 
-void sh1106_fill(uint8_t pattern) 
-{
-    for (uint8_t page = 0; page < 8; page++) 
-    {
-        drv_sh1106_send_command(0xB0 + page); // Set page address
-        drv_sh1106_send_command(0x00); // Set lower column address
-        drv_sh1106_send_command(0x10); // Set higher column address
-        for (uint8_t col = 0; col < 132; col++) 
-        {
-            drv_sh1106_write_data(pattern); // Fill column with pattern
-        }
-    }
-}
+// void drv_sh1106_fill_screen(uint8_t pattern) 
+// {
+//     for (uint8_t page = 0; page < 8; page++) 
+//     {
+//         drv_sh1106_send_command(0xB0 + page); // Set page address
+//         drv_sh1106_send_command(0x00); // Set lower column address
+//         drv_sh1106_send_command(0x10); // Set higher column address
+//         for (uint8_t col = 0; col < 132; col++) 
+//         {
+//             drv_sh1106_write_data(pattern); // Fill column with pattern
+//         }
+//     }
+// }
