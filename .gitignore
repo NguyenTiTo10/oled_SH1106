@@ -1,12 +1,11 @@
 # Ignore everything
 *
 
-# Unignore specific folders and files
-!/main
+# Allow the main folder
+!/main/
 !/main/**
-!/README.md
-!/sdkconfig
-!/sdkconfig.old
 
-# Ensure .gitignore itself is tracked
-!/.gitignore
+# Allow specific files
+!Readme.md
+!sdkconfig
+!sdkconfig.old
