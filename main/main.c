@@ -22,9 +22,9 @@ void app_main(void) {
     vTaskDelay(500 / portTICK_PERIOD_MS);
 
     // Test displaying a string on the OLED
-    sh1106_draw_string(0, 0, "Hello, ESP-IDF!");
-    sh1106_draw_string(0, 1, "Multiline OK!");
-    sh1106_draw_string(0, 2, "Another line.!");
+    drv_sh1106_write_string(0, 0, "Hello, ESP-IDF!");
+    drv_sh1106_write_string(0, 1, "Multiline OK!");
+    drv_sh1106_write_string(0, 2, "Another line.!");
 
     vTaskDelay(3000 / portTICK_PERIOD_MS);
 
@@ -36,7 +36,7 @@ void app_main(void) {
     // Clear the display again
     drv_sh1106_clear_screen();
 
-    sh1106_draw_string(0, 5, "Welcome to Viet Nam");
+    drv_sh1106_write_string(0, 5, "Welcome to Viet Nam");
 
 
 }

@@ -139,7 +139,7 @@ void drv_sh1106_write_char(uint8_t x, uint8_t y, char c)
 }
 
 
-void sh1106_draw_string(uint8_t x, uint8_t y, const char *str) 
+void drv_sh1106_write_string(uint8_t x, uint8_t y, const char *str) 
 {
     uint8_t start_x = x + 2; // Adjust start position for SH1106 offset
 
@@ -147,12 +147,12 @@ void sh1106_draw_string(uint8_t x, uint8_t y, const char *str)
     {
         drv_sh1106_write_char(start_x, y, *str++);
         start_x += 8; // Move to the next character position
-        if (start_x >= 128) { // Wrap to the next line if necessary
+        if (start_x >= 128) 
+        { // Wrap to the next line if necessary
             start_x = 2; // Reset to adjusted start
             y++;
-            if (y >= 8) {
+            if (y >= 8) 
                 break; // Stop if out of vertical bounds
-            }
         }
     }
 }
@@ -164,7 +164,8 @@ void sh1106_fill(uint8_t pattern)
         drv_sh1106_send_command(0xB0 + page); // Set page address
         drv_sh1106_send_command(0x00); // Set lower column address
         drv_sh1106_send_command(0x10); // Set higher column address
-        for (uint8_t col = 0; col < 132; col++) {
+        for (uint8_t col = 0; col < 132; col++) 
+        {
             drv_sh1106_write_data(pattern); // Fill column with pattern
         }
     }
