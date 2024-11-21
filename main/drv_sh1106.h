@@ -8,7 +8,7 @@
 
 // Function prototypes
 esp_err_t i2c_master_init(void);
-esp_err_t sh1106_send_command(uint8_t command);
+esp_err_t drv_sh1106_send_command(uint8_t command);
 esp_err_t drv_sh1106_write_data(uint8_t data);
 void sh1106_init(void);
 void sh1106_clear(void);

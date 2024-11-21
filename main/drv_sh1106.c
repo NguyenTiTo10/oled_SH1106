@@ -38,7 +38,7 @@ esp_err_t i2c_master_init(void)
  *      0x00: Control byte for command transmission. The D/C# bit determines whether the next byte is a command (0) or data (1).
  *      i2c_master_cmd_begin: Executes the queued I2C operations within a 1-second timeout.     
  */
-esp_err_t sh1106_send_command(uint8_t command) 
+esp_err_t drv_sh1106_send_command(uint8_t command) 
 {
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();       // Creates a new I2C command link
     i2c_master_start(cmd);                              // Starts an I2C transmission
@@ -58,7 +58,7 @@ esp_err_t sh1106_send_command(uint8_t command)
  * @brief
  *  Purpose
  *      This function is used for transferring display content.
- *  Difference from sh1106_send_command:
+ *  Difference from drv_sh1106_send_command:
  *      The control byte is 0x40, indicating that the following byte(s) are data.s
  */
 esp_err_t drv_sh1106_write_data(uint8_t data) 
@@ -104,7 +104,7 @@ void sh1106_init(void)
         0xAF        // Display ON
     };
     for (int i = 0; i < sizeof(init_cmds); i++) {
-        sh1106_send_command(init_cmds[i]);
+        drv_sh1106_send_command(init_cmds[i]);
     }
 }
 
@@ -112,9 +112,9 @@ void sh1106_clear(void)
 {
     for (uint8_t page = 0; page < 8; page++) 
     {
-        sh1106_send_command(0xB0 + page); // Set page address
-        sh1106_send_command(0x00); // Set lower column address
-        sh1106_send_command(0x10); // Set higher column address
+        drv_sh1106_send_command(0xB0 + page); // Set page address
+        drv_sh1106_send_command(0x00); // Set lower column address
+        drv_sh1106_send_command(0x10); // Set higher column address
         for (uint8_t col = 0; col < 132; col++) {
             drv_sh1106_write_data(0x00); // Clear column data
         }
@@ -129,9 +129,9 @@ void sh1106_draw_char(uint8_t x, uint8_t y, char c)
 
     uint8_t adjusted_x = x + 2; // Adjust by 2 to account for the SH1106 column offset
 
-    sh1106_send_command(0xB0 + y);            // Set page address
-    sh1106_send_command(0x00 + (adjusted_x & 0x0F)); // Set lower column address
-    sh1106_send_command(0x10 + (adjusted_x >> 4));   // Set higher column address
+    drv_sh1106_send_command(0xB0 + y);            // Set page address
+    drv_sh1106_send_command(0x00 + (adjusted_x & 0x0F)); // Set lower column address
+    drv_sh1106_send_command(0x10 + (adjusted_x >> 4));   // Set higher column address
 
     for (int i = 0; i < 8; i++) {
         drv_sh1106_write_data(font8x8_basic_tr[(uint8_t)c][i]);
@@ -161,9 +161,9 @@ void sh1106_fill(uint8_t pattern)
 {
     for (uint8_t page = 0; page < 8; page++) 
     {
-        sh1106_send_command(0xB0 + page); // Set page address
-        sh1106_send_command(0x00); // Set lower column address
-        sh1106_send_command(0x10); // Set higher column address
+        drv_sh1106_send_command(0xB0 + page); // Set page address
+        drv_sh1106_send_command(0x00); // Set lower column address
+        drv_sh1106_send_command(0x10); // Set higher column address
         for (uint8_t col = 0; col < 132; col++) {
             drv_sh1106_write_data(pattern); // Fill column with pattern
         }
