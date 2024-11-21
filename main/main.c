@@ -5,15 +5,8 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
-void app_main(void) {
-    // Initialize I2C and the SH1106 OLED display
-    if (i2c_master_init() == ESP_OK) {
-        printf("I2C initialized successfully.\n");
-    } else {
-        printf("Failed to initialize I2C.\n");
-        return;
-    }
-
+void app_main(void) 
+{
     drv_sh1106_init();
     printf("SH1106 initialized successfully.\n");
 

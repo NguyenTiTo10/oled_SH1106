@@ -3,7 +3,9 @@
 #include <stdio.h>
 #include "driver/i2c.h"
 #include "drv_sh1106.h"
+#include "esp_err.h"
 #include "font8x8_basic.h"
+
 
 // I2C configuration
 #define I2C_MASTER_SCL_IO 22         // GPIO for SCL
@@ -11,6 +13,12 @@
 #define I2C_MASTER_NUM I2C_NUM_0     // I2C port number
 #define I2C_MASTER_FREQ_HZ 400000    // I2C clock frequency
 #define OLED_I2C_ADDR 0x3C           // SH1106 I2C address
+
+
+// Function prototypes
+static esp_err_t i2c_master_init(void);
+static esp_err_t drv_sh1106_send_command(uint8_t command);
+static esp_err_t drv_sh1106_write_data(uint8_t data);
 
 esp_err_t i2c_master_init(void) 
 {
@@ -85,6 +93,15 @@ esp_err_t drv_sh1106_write_data(uint8_t data)
  */
 void drv_sh1106_init(void) 
 {
+    // Initialize I2C and the SH1106 OLED display
+    if (i2c_master_init() == ESP_OK) 
+        printf("I2C initialized successfully.\n");
+    else 
+    {
+        printf("Failed to initialize I2C.\n");
+        return;
+    }
+
     uint8_t init_cmds[] = 
     {
         0xAE,       // Display OFF

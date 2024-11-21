@@ -4,12 +4,8 @@
 #define SH1106_H
 
 #include <stdint.h>
-#include "esp_err.h"
 
-// Function prototypes
-esp_err_t i2c_master_init(void);
-esp_err_t drv_sh1106_send_command(uint8_t command);
-esp_err_t drv_sh1106_write_data(uint8_t data);
+
 void drv_sh1106_init(void);
 void drv_sh1106_clear_screen(void);
 void drv_sh1106_write_char(uint8_t x, uint8_t y, char c);
