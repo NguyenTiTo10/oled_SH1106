@@ -14,7 +14,7 @@ void app_main(void) {
         return;
     }
 
-    sh1106_init();
+    drv_sh1106_init();
     printf("SH1106 initialized successfully.\n");
 
     // Clear the display

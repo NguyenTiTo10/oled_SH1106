@@ -83,7 +83,7 @@ esp_err_t drv_sh1106_write_data(uint8_t data)
  *          including contrast, display offset, and scan direction.
  *      0xAF: Turns the display ON after configuration.
  */
-void sh1106_init(void) 
+void drv_sh1106_init(void) 
 {
     uint8_t init_cmds[] = 
     {

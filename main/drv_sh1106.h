@@ -10,7 +10,7 @@
 esp_err_t i2c_master_init(void);
 esp_err_t drv_sh1106_send_command(uint8_t command);
 esp_err_t drv_sh1106_write_data(uint8_t data);
-void sh1106_init(void);
+void drv_sh1106_init(void);
 void sh1106_clear(void);
 void sh1106_draw_char(uint8_t x, uint8_t y, char c);
 void sh1106_draw_string(uint8_t x, uint8_t y, const char *str);
