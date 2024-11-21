@@ -1,0 +1,12 @@
+# Ignore everything
+*
+
+# Unignore specific folders and files
+!/main
+!/main/**
+!/README.md
+!/sdkconfig
+!/sdkconfig.old
+
+# Ensure .gitignore itself is tracked
+!/.gitignore
