@@ -1,0 +1,21 @@
+# Ignore everything by default
+*
+
+# Allow the 'main' folder and its contents
+!/main/
+!/main/**
+
+# Allow the .vscode folder and its contents
+!.vscode/
+!.vscode/**
+
+# Allow specific files at the root level
+!Readme.md
+!sdkconfig
+!sdkconfig.old
+
+# Allow CMakeLists.txt in all directories (including subdirectories)
+!**/CMakeLists.txt
+
+# Don't ignore the .gitignore file itself
+!.gitignore
