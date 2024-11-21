@@ -14,8 +14,11 @@
 #define I2C_MASTER_FREQ_HZ 400000    // I2C clock frequency
 #define OLED_I2C_ADDR 0x3C           // SH1106 I2C address
 
+// OLED resolution macros
+#define OLED_WIDTH 128           // OLED width in pixels
+#define OLED_HEIGHT 64           // OLED height in pixels
 
-// Function prototypes
+
 static esp_err_t i2c_master_init(void);
 static esp_err_t drv_sh1106_send_command(uint8_t command);
 static esp_err_t drv_sh1106_write_data(uint8_t data);
@@ -104,12 +107,12 @@ void drv_sh1106_init(void)
 
 void drv_sh1106_clear_screen(void) 
 {
-    for (uint8_t page = 0; page < 8; page++) 
+    for (uint8_t page = 0; page < (OLED_HEIGHT / 8); page++) 
     {
         drv_sh1106_send_command(0xB0 + page); // Set page address
         drv_sh1106_send_command(0x00); // Set lower column address
         drv_sh1106_send_command(0x10); // Set higher column address
-        for (uint8_t col = 0; col < 128; col++) {
+        for (uint8_t col = 0; col < OLED_WIDTH; col++) {
             drv_sh1106_write_data(0x00); // Clear column data
         }
     }
@@ -117,7 +120,7 @@ void drv_sh1106_clear_screen(void)
 
 static void drv_sh1106_write_char(uint8_t x, uint8_t y, char c) 
 {
-    if (x >= 128 || y >= 8) 
+    if (x >= OLED_WIDTH || y >= (OLED_HEIGHT / 8)) 
         return; // Prevent out-of-bounds drawing
 
     uint8_t adjusted_x = x + 2; // Adjust by 2 to account for the SH1106 column offset
@@ -126,7 +129,7 @@ static void drv_sh1106_write_char(uint8_t x, uint8_t y, char c)
     drv_sh1106_send_command(0x00 + (adjusted_x & 0x0F)); // Set lower column address
     drv_sh1106_send_command(0x10 + (adjusted_x >> 4));   // Set higher column address
 
-    for (int i = 0; i < 8; i++) 
+    for (int i = 0; i < (OLED_HEIGHT / 8); i++) 
     {
         drv_sh1106_write_data(font8x8_basic_tr[(uint8_t)c][i]);
     }
@@ -141,11 +144,11 @@ void drv_sh1106_write_string(uint8_t x, uint8_t y, const char *str)
     {
         drv_sh1106_write_char(start_x, y, *str++);
         start_x += 8; // Move to the next character position
-        if (start_x >= 128) 
+        if (start_x >= OLED_WIDTH) 
         { // Wrap to the next line if necessary
             start_x = 2; // Reset to adjusted start
             y++;
-            if (y >= 8) 
+            if (y >= (OLED_HEIGHT / 8)) 
                 break; // Stop if out of vertical bounds
         }
     }
@@ -158,7 +161,7 @@ void drv_sh1106_write_string(uint8_t x, uint8_t y, const char *str)
 //         drv_sh1106_send_command(0xB0 + page); // Set page address
 //         drv_sh1106_send_command(0x00); // Set lower column address
 //         drv_sh1106_send_command(0x10); // Set higher column address
-//         for (uint8_t col = 0; col < 128; col++) 
+//         for (uint8_t col = 0; col < OLED_WIDTH; col++) 
 //         {
 //             drv_sh1106_write_data(pattern); // Fill column with pattern
 //         }
