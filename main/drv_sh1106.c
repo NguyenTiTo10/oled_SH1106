@@ -108,7 +108,7 @@ void drv_sh1106_init(void)
     }
 }
 
-void sh1106_clear(void) 
+void drv_sh1106_clear_screen(void) 
 {
     for (uint8_t page = 0; page < 8; page++) 
     {

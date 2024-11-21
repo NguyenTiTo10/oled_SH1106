@@ -18,7 +18,7 @@ void app_main(void) {
     printf("SH1106 initialized successfully.\n");
 
     // Clear the display
-    sh1106_clear();
+    drv_sh1106_clear_screen();
     vTaskDelay(500 / portTICK_PERIOD_MS);
 
     // Test displaying a string on the OLED
@@ -34,7 +34,7 @@ void app_main(void) {
 
 
     // Clear the display again
-    sh1106_clear();
+    drv_sh1106_clear_screen();
 
     sh1106_draw_string(0, 5, "Welcome to Viet Nam");
 
