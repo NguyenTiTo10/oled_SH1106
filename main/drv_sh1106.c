@@ -61,7 +61,7 @@ esp_err_t sh1106_send_command(uint8_t command)
  *  Difference from sh1106_send_command:
  *      The control byte is 0x40, indicating that the following byte(s) are data.s
  */
-esp_err_t sh1106_send_data(uint8_t data) 
+esp_err_t drv_sh1106_write_command(uint8_t data) 
 {
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();       // Create I2C command link
     i2c_master_start(cmd);                              // Start I2C transmission
@@ -116,7 +116,7 @@ void sh1106_clear(void)
         sh1106_send_command(0x00); // Set lower column address
         sh1106_send_command(0x10); // Set higher column address
         for (uint8_t col = 0; col < 132; col++) {
-            sh1106_send_data(0x00); // Clear column data
+            drv_sh1106_write_command(0x00); // Clear column data
         }
     }
 }
@@ -134,7 +134,7 @@ void sh1106_draw_char(uint8_t x, uint8_t y, char c)
     sh1106_send_command(0x10 + (adjusted_x >> 4));   // Set higher column address
 
     for (int i = 0; i < 8; i++) {
-        sh1106_send_data(font8x8_basic_tr[(uint8_t)c][i]);
+        drv_sh1106_write_command(font8x8_basic_tr[(uint8_t)c][i]);
     }
 }
 
@@ -165,7 +165,7 @@ void sh1106_fill(uint8_t pattern)
         sh1106_send_command(0x00); // Set lower column address
         sh1106_send_command(0x10); // Set higher column address
         for (uint8_t col = 0; col < 132; col++) {
-            sh1106_send_data(pattern); // Fill column with pattern
+            drv_sh1106_write_command(pattern); // Fill column with pattern
         }
     }
 }
