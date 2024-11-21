@@ -18,9 +18,6 @@
 static esp_err_t drv_sh1106_send_command(uint8_t command);
 static esp_err_t drv_sh1106_write_data(uint8_t data);
 
-
-
-
 static esp_err_t drv_sh1106_send_command(uint8_t command) 
 {
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();       // Creates a new I2C command link
