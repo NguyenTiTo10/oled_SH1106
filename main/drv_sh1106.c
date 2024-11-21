@@ -121,11 +121,10 @@ void drv_sh1106_clear_screen(void)
     }
 }
 
-void sh1106_draw_char(uint8_t x, uint8_t y, char c) 
+void drv_sh1106_write_char(uint8_t x, uint8_t y, char c) 
 {
-    if (x >= 128 || y >= 8) {
+    if (x >= 128 || y >= 8) 
         return; // Prevent out-of-bounds drawing
-    }
 
     uint8_t adjusted_x = x + 2; // Adjust by 2 to account for the SH1106 column offset
 
@@ -133,7 +132,8 @@ void sh1106_draw_char(uint8_t x, uint8_t y, char c)
     drv_sh1106_send_command(0x00 + (adjusted_x & 0x0F)); // Set lower column address
     drv_sh1106_send_command(0x10 + (adjusted_x >> 4));   // Set higher column address
 
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 8; i++) 
+    {
         drv_sh1106_write_data(font8x8_basic_tr[(uint8_t)c][i]);
     }
 }
@@ -145,7 +145,7 @@ void sh1106_draw_string(uint8_t x, uint8_t y, const char *str)
 
     while (*str) 
     {
-        sh1106_draw_char(start_x, y, *str++);
+        drv_sh1106_write_char(start_x, y, *str++);
         start_x += 8; // Move to the next character position
         if (start_x >= 128) { // Wrap to the next line if necessary
             start_x = 2; // Reset to adjusted start
