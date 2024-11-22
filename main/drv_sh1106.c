@@ -138,21 +138,27 @@ void drv_sh1106_write_string(uint8_t x, uint8_t y, const char *str)
 //     }
 // }
 
-void drv_sh1106_draw_image(const uint8_t *image_data, uint8_t width, uint8_t height) 
+void drv_sh1106_draw_image(const uint8_t *image_data)
 {
-    if (width > OLED_WIDTH || height > OLED_HEIGHT) 
-    {
-        printf("Error: Image dimensions exceed OLED resolution\n");
-        return; // Prevent out-of-bounds writes
-    }
+    // Iterate over each page (8 rows per page)
+    for (uint8_t page = 0; page < (OLED_HEIGHT / 8); page++) {
+        // Set the page address
+        drv_sh1106_send_command(0xB0 + page);
+        // Reset column to the start
+        drv_sh1106_send_command(0x00); // Set lower column address
+        drv_sh1106_send_command(0x10); // Set higher column address
 
-    uint8_t pages = height / 8; // Number of pages in the image
-    for (uint8_t page = 0; page < pages; page++) {
-        drv_sh1106_send_command(0xB0 + page); // Set page address
-        drv_sh1106_send_command(0x00);        // Set lower column address
-        drv_sh1106_send_command(0x10);        // Set higher column address
-        for (uint8_t col = 0; col < width; col++) {
-            drv_sh1106_write_data(image_data[page * width + col]); // Write image data
+        // Iterate over each column in the page
+        for (uint8_t col = 0; col < OLED_WIDTH; col++) {
+            // Double each pixel vertically
+            uint8_t pixel = image_data[page * OLED_WIDTH + col];
+            uint8_t doubled_pixel = 0;
+            for (int bit = 0; bit < 8; bit++) {
+                if (pixel & (1 << bit)) {
+                    doubled_pixel |= (3 << (bit * 2)); // Duplicate each bit
+                }
+            }
+            drv_sh1106_write_data(doubled_pixel);
         }
     }
 }

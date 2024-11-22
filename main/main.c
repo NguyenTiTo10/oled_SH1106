@@ -47,12 +47,12 @@ void app_main(void)
     drv_sh1106_clear_screen();
     vTaskDelay(500 / portTICK_PERIOD_MS);
 
-    // Test displaying a string on the OLED
-    drv_sh1106_write_string(0, 0, "Hello, ESP-IDF!");
-    drv_sh1106_write_string(0, 1, "Multiline OK!");
-    drv_sh1106_write_string(0, 5, "Another line.!");
+    // // Test displaying a string on the OLED
+    // drv_sh1106_write_string(0, 0, "Hello, ESP-IDF!");
+    // drv_sh1106_write_string(0, 1, "Multiline OK!");
+    // drv_sh1106_write_string(0, 5, "Another line.!");
 
-    vTaskDelay(3000 / portTICK_PERIOD_MS);
+    // vTaskDelay(3000 / portTICK_PERIOD_MS);
 
     // // Fill the display with a pattern
     // drv_sh1106_fill_screen(0xAA); // Example pattern
@@ -62,7 +62,6 @@ void app_main(void)
     // Clear the display again
     drv_sh1106_clear_screen();
 
-    drv_sh1106_draw_image(logo_ce_image, 128, 64); // Draw the 16x16 image
-
+    drv_sh1106_draw_image(logo_ce_image); // Draw the logo image    
 
 }

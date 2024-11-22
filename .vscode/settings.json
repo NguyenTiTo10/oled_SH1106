@@ -18,6 +18,7 @@
   "files.associations": {
     "freertos.h": "c",
     "*.inc": "cpp",
-    "image_128x64.h": "c"
+    "image_128x64.h": "c",
+    "cstddef": "c"
   }
 }
