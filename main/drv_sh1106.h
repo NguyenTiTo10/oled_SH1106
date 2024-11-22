@@ -1,7 +1,7 @@
 // File: main/sh1106.h
 
-#ifndef SH1106_H
-#define SH1106_H
+#ifndef DRV_SH1106_H
+#define DRV_SH1106_H
 
 #include <stdint.h>
 
