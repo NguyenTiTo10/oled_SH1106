@@ -7,6 +7,7 @@
 
 #include "driver/i2c.h"
 #include "esp_err.h"
+#include "image_128x64.h"
 
 // I2C configuration
 #define I2C_MASTER_SCL_IO 22         // GPIO for SCL
@@ -49,7 +50,7 @@ void app_main(void)
     // Test displaying a string on the OLED
     drv_sh1106_write_string(0, 0, "Hello, ESP-IDF!");
     drv_sh1106_write_string(0, 1, "Multiline OK!");
-    drv_sh1106_write_string(0, 2, "Another line.!");
+    drv_sh1106_write_string(0, 5, "Another line.!");
 
     vTaskDelay(3000 / portTICK_PERIOD_MS);
 
@@ -61,7 +62,7 @@ void app_main(void)
     // Clear the display again
     drv_sh1106_clear_screen();
 
-    drv_sh1106_write_string(0, 5, "Welcome to Viet Nam");
+    drv_sh1106_draw_image(logo_ce_image, 128, 64); // Draw the 16x16 image
 
 
 }

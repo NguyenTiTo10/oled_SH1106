@@ -1,4 +1,4 @@
-#include <cstdint>
+#include "stdint.h"
 
 #ifndef IMAGE_128X64_H
 #define IMAGE_128X64_H

@@ -137,3 +137,22 @@ void drv_sh1106_write_string(uint8_t x, uint8_t y, const char *str)
 //         }
 //     }
 // }
+
+void drv_sh1106_draw_image(const uint8_t *image_data, uint8_t width, uint8_t height) 
+{
+    if (width > OLED_WIDTH || height > OLED_HEIGHT) 
+    {
+        printf("Error: Image dimensions exceed OLED resolution\n");
+        return; // Prevent out-of-bounds writes
+    }
+
+    uint8_t pages = height / 8; // Number of pages in the image
+    for (uint8_t page = 0; page < pages; page++) {
+        drv_sh1106_send_command(0xB0 + page); // Set page address
+        drv_sh1106_send_command(0x00);        // Set lower column address
+        drv_sh1106_send_command(0x10);        // Set higher column address
+        for (uint8_t col = 0; col < width; col++) {
+            drv_sh1106_write_data(image_data[page * width + col]); // Write image data
+        }
+    }
+}
