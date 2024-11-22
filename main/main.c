@@ -62,6 +62,6 @@ void app_main(void)
     // Clear the display again
     drv_sh1106_clear_screen();
 
-    drv_sh1106_draw_image(logo_ce_image); // Draw the logo image    
+    drv_sh1106_draw_image(logo_ce_image, 128, 64); 
 
 }

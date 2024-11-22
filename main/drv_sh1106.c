@@ -138,27 +138,53 @@ void drv_sh1106_write_string(uint8_t x, uint8_t y, const char *str)
 //     }
 // }
 
-void drv_sh1106_draw_image(const uint8_t *image_data)
-{
-    // Iterate over each page (8 rows per page)
-    for (uint8_t page = 0; page < (OLED_HEIGHT / 8); page++) {
-        // Set the page address
-        drv_sh1106_send_command(0xB0 + page);
-        // Reset column to the start
-        drv_sh1106_send_command(0x00); // Set lower column address
-        drv_sh1106_send_command(0x10); // Set higher column address
 
-        // Iterate over each column in the page
-        for (uint8_t col = 0; col < OLED_WIDTH; col++) {
-            // Double each pixel vertically
-            uint8_t pixel = image_data[page * OLED_WIDTH + col];
-            uint8_t doubled_pixel = 0;
-            for (int bit = 0; bit < 8; bit++) {
-                if (pixel & (1 << bit)) {
-                    doubled_pixel |= (3 << (bit * 2)); // Duplicate each bit
-                }
-            }
-            drv_sh1106_write_data(doubled_pixel);
+// Draw a single pixel on the screen
+void drv_sh1106_draw_pixel(uint8_t x, uint8_t y, uint8_t color) {
+    if (x >= OLED_WIDTH || y >= OLED_HEIGHT)
+        return; // Out-of-bounds check
+
+    // Determine the page and bit position
+    uint8_t page = y / 8;
+    uint8_t bit = y % 8;
+
+    // Set page address
+    drv_sh1106_send_command(0xB0 + page);
+    // Set column address (adjust for SH1106 2-pixel offset)
+    drv_sh1106_send_command(0x00 + ((x + 2) & 0x0F));  // Lower column address
+    drv_sh1106_send_command(0x10 + ((x + 2) >> 4));    // Higher column address
+
+    // Retrieve the current byte for the column
+    uint8_t current_byte = 0x00; // Assumes clear screen; implement framebuffer if needed.
+
+    // Set or clear the pixel bit
+    if (color)
+        current_byte |= (1 << bit);
+    else
+        current_byte &= ~(1 << bit);
+
+    // Write the updated byte back to the display
+    drv_sh1106_write_data(current_byte);
+}
+
+// Draw an image on the screen
+void drv_sh1106_draw_image(const uint8_t *image_data, uint8_t width, uint8_t height) {
+    if (width > OLED_WIDTH || height > OLED_HEIGHT) {
+        printf("Error: Image dimensions exceed OLED resolution\n");
+        return;
+    }
+
+    for (uint8_t y = 0; y < height; y++) {
+        for (uint8_t x = 0; x < width; x++) {
+            // Determine the byte and bit position in the image array
+            uint8_t byte_index = (y / 8) * width + x;
+            uint8_t bit_index = y % 8;
+
+            // Extract the pixel value (1 if bit is set, 0 otherwise)
+            uint8_t pixel = (image_data[byte_index] >> bit_index) & 0x01;
+
+            // Draw the pixel
+            drv_sh1106_draw_pixel(x, y, pixel);
         }
     }
 }

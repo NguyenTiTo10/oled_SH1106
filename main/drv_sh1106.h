@@ -9,7 +9,7 @@
 void drv_sh1106_init(void);
 void drv_sh1106_clear_screen(void);
 void drv_sh1106_write_string(uint8_t x, uint8_t y, const char *str);
-void drv_sh1106_draw_image(const uint8_t *image_data);
+void drv_sh1106_draw_image(const uint8_t *image_data, uint8_t width, uint8_t height);
 // void sh1106_set_cursor(uint8_t x, uint8_t y);
 // void drv_sh1106_fill_screen(uint8_t pattern);
 
