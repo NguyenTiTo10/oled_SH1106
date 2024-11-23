@@ -188,3 +188,48 @@ void drv_sh1106_draw_image(const uint8_t *image_data, uint8_t width, uint8_t hei
         }
     }
 }
+
+
+
+// ---------------------------------------- Code test from claude AI ------------------------ //
+
+
+// Function to display a full-screen bitmap (128x64 pixels)
+void drv_sh1106_display_bitmap(const uint8_t *bitmap) {
+    // The bitmap should be 1024 bytes (128 * 64 / 8)
+    for (uint8_t page = 0; page < (OLED_HEIGHT / 8); page++) {
+        drv_sh1106_send_command(0xB0 + page);           // Set page address
+        drv_sh1106_send_command(0x02);                  // Set lower column address (offset by 2)
+        drv_sh1106_send_command(0x10);                  // Set higher column address
+
+        // Write one page (128 bytes) of bitmap data
+        for (uint8_t col = 0; col < OLED_WIDTH; col++) {
+            drv_sh1106_write_data(bitmap[page * OLED_WIDTH + col]);
+        }
+    }
+}
+
+// Function to display part of a bitmap at specified coordinates
+void drv_sh1106_display_bitmap_part(const uint8_t *bitmap, uint8_t x, uint8_t y, 
+                                  uint8_t width, uint8_t height) {
+    if (x >= OLED_WIDTH || y >= OLED_HEIGHT) return;
+    
+    // Adjust width and height if they exceed display boundaries
+    if (x + width > OLED_WIDTH) width = OLED_WIDTH - x;
+    if (y + height > OLED_HEIGHT) height = OLED_HEIGHT - y;
+    
+    // Calculate pages needed
+    uint8_t start_page = y / 8;
+    uint8_t end_page = (y + height - 1) / 8;
+    
+    for (uint8_t page = start_page; page <= end_page; page++) {
+        drv_sh1106_send_command(0xB0 + page);           // Set page address
+        drv_sh1106_send_command(0x02 + (x & 0x0F));    // Set lower column address
+        drv_sh1106_send_command(0x10 + (x >> 4));      // Set higher column address
+        
+        for (uint8_t col = 0; col < width; col++) {
+            uint8_t data = bitmap[(page - start_page) * width + col];
+            drv_sh1106_write_data(data);
+        }
+    }
+}
