@@ -43,9 +43,10 @@ void app_main(void)
     drv_sh1106_init();
     printf("SH1106 initialized successfully.\n");
 
+#ifdef DISPLAY_TEXT
     // Clear the display
-    drv_sh1106_clear_screen();
-    vTaskDelay(500 / portTICK_PERIOD_MS);
+    // drv_sh1106_clear_screen();
+    // vTaskDelay(500 / portTICK_PERIOD_MS);
 
     // // Test displaying a string on the OLED
     // drv_sh1106_write_string(0, 0, "Hello, ESP-IDF!");
@@ -58,10 +59,12 @@ void app_main(void)
     // drv_sh1106_fill_screen(0xAA); // Example pattern
     // vTaskDelay(1000 / portTICK_PERIOD_MS);
 
-
+#else
     // Clear the display again
     drv_sh1106_clear_screen();
+    vTaskDelay(500 / portTICK_PERIOD_MS);
+    drv_sh1106_display_image(logo_ce_image);
+#endif
 
-    drv_sh1106_draw_image(logo_ce_image, 128, 64); 
 
 }

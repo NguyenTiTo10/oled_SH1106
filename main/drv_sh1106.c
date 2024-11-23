@@ -11,7 +11,7 @@
 #define OLED_I2C_ADDR 0x3C           // SH1106 I2C address
 
 // OLED resolution macros
-#define OLED_WIDTH 128           // OLED width in pixels
+#define OLED_WIDTH 132           // OLED width in pixels
 #define OLED_HEIGHT 64           // OLED height in pixels
 
 
@@ -139,97 +139,19 @@ void drv_sh1106_write_string(uint8_t x, uint8_t y, const char *str)
 // }
 
 
-// Draw a single pixel on the screen
-void drv_sh1106_draw_pixel(uint8_t x, uint8_t y, uint8_t color) {
-    if (x >= OLED_WIDTH || y >= OLED_HEIGHT)
-        return; // Out-of-bounds check
-
-    // Determine the page and bit position
-    uint8_t page = y / 8;
-    uint8_t bit = y % 8;
-
-    // Set page address
-    drv_sh1106_send_command(0xB0 + page);
-    // Set column address (adjust for SH1106 2-pixel offset)
-    drv_sh1106_send_command(0x00 + ((x + 2) & 0x0F));  // Lower column address
-    drv_sh1106_send_command(0x10 + ((x + 2) >> 4));    // Higher column address
-
-    // Retrieve the current byte for the column
-    uint8_t current_byte = 0x00; // Assumes clear screen; implement framebuffer if needed.
-
-    // Set or clear the pixel bit
-    if (color)
-        current_byte |= (1 << bit);
-    else
-        current_byte &= ~(1 << bit);
-
-    // Write the updated byte back to the display
-    drv_sh1106_write_data(current_byte);
-}
-
-// Draw an image on the screen
-void drv_sh1106_draw_image(const uint8_t *image_data, uint8_t width, uint8_t height) {
-    if (width > OLED_WIDTH || height > OLED_HEIGHT) {
-        printf("Error: Image dimensions exceed OLED resolution\n");
-        return;
-    }
-
-    for (uint8_t y = 0; y < height; y++) {
-        for (uint8_t x = 0; x < width; x++) {
-            // Determine the byte and bit position in the image array
-            uint8_t byte_index = (y / 8) * width + x;
-            uint8_t bit_index = y % 8;
-
-            // Extract the pixel value (1 if bit is set, 0 otherwise)
-            uint8_t pixel = (image_data[byte_index] >> bit_index) & 0x01;
-
-            // Draw the pixel
-            drv_sh1106_draw_pixel(x, y, pixel);
-        }
-    }
-}
-
-
-
-// ---------------------------------------- Code test from claude AI ------------------------ //
-
-
-// Function to display a full-screen bitmap (128x64 pixels)
-void drv_sh1106_display_bitmap(const uint8_t *bitmap) {
-    // The bitmap should be 1024 bytes (128 * 64 / 8)
-    for (uint8_t page = 0; page < (OLED_HEIGHT / 8); page++) {
-        drv_sh1106_send_command(0xB0 + page);           // Set page address
-        drv_sh1106_send_command(0x02);                  // Set lower column address (offset by 2)
-        drv_sh1106_send_command(0x10);                  // Set higher column address
-
-        // Write one page (128 bytes) of bitmap data
-        for (uint8_t col = 0; col < OLED_WIDTH; col++) {
-            drv_sh1106_write_data(bitmap[page * OLED_WIDTH + col]);
-        }
-    }
-}
-
-// Function to display part of a bitmap at specified coordinates
-void drv_sh1106_display_bitmap_part(const uint8_t *bitmap, uint8_t x, uint8_t y, 
-                                  uint8_t width, uint8_t height) {
-    if (x >= OLED_WIDTH || y >= OLED_HEIGHT) return;
-    
-    // Adjust width and height if they exceed display boundaries
-    if (x + width > OLED_WIDTH) width = OLED_WIDTH - x;
-    if (y + height > OLED_HEIGHT) height = OLED_HEIGHT - y;
-    
-    // Calculate pages needed
-    uint8_t start_page = y / 8;
-    uint8_t end_page = (y + height - 1) / 8;
-    
-    for (uint8_t page = start_page; page <= end_page; page++) {
-        drv_sh1106_send_command(0xB0 + page);           // Set page address
-        drv_sh1106_send_command(0x02 + (x & 0x0F));    // Set lower column address
-        drv_sh1106_send_command(0x10 + (x >> 4));      // Set higher column address
+void drv_sh1106_display_image(const uint8_t *image) 
+{
+    for (uint8_t page = 0; page < (OLED_HEIGHT / 8); page++) 
+    {
+        drv_sh1106_send_command(0xB0 + page); // Set page address
+        drv_sh1106_send_command(0x00);       // Set lower column address
+        drv_sh1106_send_command(0x10);       // Set higher column address
         
-        for (uint8_t col = 0; col < width; col++) {
-            uint8_t data = bitmap[(page - start_page) * width + col];
-            drv_sh1106_write_data(data);
+        for (uint8_t col = 0; col < OLED_WIDTH; col++) 
+        {
+            // Send image data for the current page and column
+            drv_sh1106_write_data(image[page * OLED_WIDTH + col]);
         }
     }
 }
+

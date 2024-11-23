@@ -13,4 +13,9 @@ void drv_sh1106_draw_image(const uint8_t *image_data, uint8_t width, uint8_t hei
 // void sh1106_set_cursor(uint8_t x, uint8_t y);
 // void drv_sh1106_fill_screen(uint8_t pattern);
 
+  // Function from claude AI
+void drv_sh1106_display_image(const uint8_t *image);
+
+  
+
 #endif // SH1106_H
