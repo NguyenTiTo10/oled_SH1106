@@ -19,6 +19,8 @@
     "freertos.h": "c",
     "*.inc": "cpp",
     "image_128x64.h": "c",
-    "cstddef": "c"
+    "cstddef": "c",
+    "cmath": "c",
+    "complex": "c"
   }
 }
