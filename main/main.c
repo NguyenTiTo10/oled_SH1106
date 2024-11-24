@@ -43,11 +43,10 @@ void app_main(void)
     drv_sh1106_init();
     printf("SH1106 initialized successfully.\n");
 
-#ifdef DISPLAY_TEXT
-    // Clear the display
-    // drv_sh1106_clear_screen();
-    // vTaskDelay(500 / portTICK_PERIOD_MS);
+    drv_sh1106_clear_screen();
+    vTaskDelay(500 / portTICK_PERIOD_MS);
 
+#ifdef DISPLAY_TEXT
     // // Test displaying a string on the OLED
     // drv_sh1106_write_string(0, 0, "Hello, ESP-IDF!");
     // drv_sh1106_write_string(0, 1, "Multiline OK!");
@@ -60,9 +59,6 @@ void app_main(void)
     // vTaskDelay(1000 / portTICK_PERIOD_MS);
 
 #else
-    // Clear the display again
-    drv_sh1106_clear_screen();
-    vTaskDelay(500 / portTICK_PERIOD_MS);
     drv_sh1106_display_image(logo_uit_image_updated);
 #endif
 

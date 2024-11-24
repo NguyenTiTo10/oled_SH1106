@@ -11,7 +11,7 @@
 #define OLED_I2C_ADDR 0x3C           // SH1106 I2C address
 
 // OLED resolution macros
-#define OLED_WIDTH 132           // OLED width in pixels
+#define OLED_WIDTH 132          // OLED width in pixels
 #define OLED_HEIGHT 64           // OLED height in pixels
 
 
