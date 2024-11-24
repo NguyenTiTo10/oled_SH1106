@@ -1,6 +1,12 @@
 #include "bsp_i2c.h"
-#include "driver/i2c.h"
-#include "esp_err.h"
+
+
+static i2c_cmd_handle_t cmd;
+
+bool bsp_i2c_init_link (void)
+{
+  return (cmd = i2c_cmd_link_create()) ? true : false; 
+}
 
 // static esp_err_t drv_sh1106_send_command(uint8_t command) 
 // {

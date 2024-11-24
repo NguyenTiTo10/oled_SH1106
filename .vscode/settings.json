@@ -21,6 +21,7 @@
     "image_128x64.h": "c",
     "cstddef": "c",
     "cmath": "c",
-    "complex": "c"
+    "complex": "c",
+    "bsp_i2c.h": "c"
   }
 }
