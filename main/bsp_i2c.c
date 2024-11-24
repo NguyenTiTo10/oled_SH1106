@@ -18,6 +18,11 @@ bool bsp_i2c_master_write (uint8_t data)
   return (i2c_master_write_byte(cmd, data, true)) ? true : false;
 }
 
+bool bsp_i2c_stop_transmit (void)
+{
+  return (i2c_master_stop(cmd)) ? true : false;
+}
+
 // static esp_err_t drv_sh1106_send_command(uint8_t command) 
 // {
 //     i2c_cmd_handle_t cmd = i2c_cmd_link_create();       // Creates a new I2C command link
