@@ -124,21 +124,9 @@ void drv_sh1106_write_string(uint8_t x, uint8_t y, const char *str)
     }
 }
 
-// void drv_sh1106_fill_screen(uint8_t pattern) 
-// {
-//     for (uint8_t page = 0; page < 8; page++) 
-//     {
-//         drv_sh1106_send_command(0xB0 + page); // Set page address
-//         drv_sh1106_send_command(0x00); // Set lower column address
-//         drv_sh1106_send_command(0x10); // Set higher column address
-//         for (uint8_t col = 0; col < OLED_WIDTH; col++) 
-//         {
-//             drv_sh1106_write_data(pattern); // Fill column with pattern
-//         }
-//     }
-// }
+// #define DISPLAY_IMAGE_VERSION_1
 
-
+#ifdef DISPLAY_IMAGE_VERSION_1
 void drv_sh1106_display_image(const uint8_t *image) 
 {
     for (uint8_t page = 0; page < (OLED_HEIGHT / 8); page++) 
@@ -155,3 +143,49 @@ void drv_sh1106_display_image(const uint8_t *image)
     }
 }
 
+#else
+    static uint8_t screen_buffer[OLED_WIDTH * (OLED_HEIGHT / 8)]; // Frame buffer
+void drv_sh1106_draw_pixel(uint8_t x, uint8_t y, uint8_t color)
+{
+    if (x >= OLED_WIDTH || y >= OLED_HEIGHT)
+        return; // Out of bounds
+
+    uint16_t index = x + (y / 8) * OLED_WIDTH; // Calculate buffer index
+    uint8_t bit = 1 << (y % 8);                // Determine the bit within the byte
+
+    if (color)
+        screen_buffer[index] |= bit;  // Set pixel (turn ON)
+    else
+        screen_buffer[index] &= ~bit; // Clear pixel (turn OFF)
+}
+
+void drv_sh1106_update_screen(void)
+{
+    for (uint8_t page = 0; page < (OLED_HEIGHT / 8); page++)
+    {
+        drv_sh1106_send_command(0xB0 + page); // Set page address
+        drv_sh1106_send_command(0x00);        // Set lower column address
+        drv_sh1106_send_command(0x10);        // Set higher column address
+
+        for (uint8_t col = 0; col < OLED_WIDTH; col++)
+        {
+            drv_sh1106_write_data(screen_buffer[page * OLED_WIDTH + col]);
+        }
+    }
+}
+
+void drv_sh1106_display_image(const uint8_t *image)
+{
+    for (uint8_t y = 0; y < OLED_HEIGHT; y++)
+    {
+        for (uint8_t x = 0; x < OLED_WIDTH; x++)
+        {
+            uint16_t byte_index = x + (y / 8) * OLED_WIDTH;
+            uint8_t bit = (image[byte_index] >> (y % 8)) & 0x01; // Extract the bit
+            drv_sh1106_draw_pixel(x, y, bit);                   // Draw the pixel
+        }
+    }
+    drv_sh1106_update_screen(); // Send the updated buffer to the display
+}
+
+#endif
