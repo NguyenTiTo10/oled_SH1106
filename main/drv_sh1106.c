@@ -5,6 +5,7 @@
 #include "esp_err.h"
 #include "drv_sh1106.h"
 #include "font8x8_basic.h"
+#include "bsp_i2c.h"
 
 
 #define I2C_MASTER_NUM I2C_NUM_0     // I2C port number
