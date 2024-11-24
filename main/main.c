@@ -61,7 +61,7 @@ void app_main(void)
 #else
     drv_sh1106_display_image(image_logo_uit);
 
-    vTaskDelay(2500 / portTICK_PERIOD_MS);
+    vTaskDelay(3000 / portTICK_PERIOD_MS);
     drv_sh1106_clear_screen();
     vTaskDelay(500 / portTICK_PERIOD_MS);
 

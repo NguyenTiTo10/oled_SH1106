@@ -14,6 +14,7 @@
 #define OLED_WIDTH 132          // OLED width in pixels
 #define OLED_HEIGHT 64           // OLED height in pixels
 
+static uint8_t screen_buffer[OLED_WIDTH * (OLED_HEIGHT / 8)];   // Frame buffer
 
 static esp_err_t drv_sh1106_send_command(uint8_t command);
 static esp_err_t drv_sh1106_write_data(uint8_t data);
@@ -144,7 +145,6 @@ void drv_sh1106_display_image(const uint8_t *image)
 }
 
 #else
-    static uint8_t screen_buffer[OLED_WIDTH * (OLED_HEIGHT / 8)]; // Frame buffer
 void drv_sh1106_draw_pixel(uint8_t x, uint8_t y, uint8_t color)
 {
     if (x >= OLED_WIDTH || y >= OLED_HEIGHT)
