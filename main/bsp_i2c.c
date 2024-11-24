@@ -3,9 +3,14 @@
 
 static i2c_cmd_handle_t cmd;
 
-bool bsp_i2c_init_link (void)
+bool bsp_i2c_link_create (void)
 {
   return (cmd = i2c_cmd_link_create()) ? true : false; 
+}
+
+bool bsp_i2c_start_transmit (void)
+{
+  return (i2c_master_start(cmd))  ? true : false;
 }
 
 // static esp_err_t drv_sh1106_send_command(uint8_t command) 

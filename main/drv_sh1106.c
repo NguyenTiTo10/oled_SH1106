@@ -19,6 +19,10 @@ static uint8_t screen_buffer[OLED_WIDTH * (OLED_HEIGHT / 8)];   // Frame buffer
 
 static esp_err_t drv_sh1106_send_command(uint8_t command);
 static esp_err_t drv_sh1106_write_data(uint8_t data);
+static void drv_sh1106_draw_pixel(uint8_t x, uint8_t y, uint8_t color);
+static void drv_sh1106_update_screen(void);
+
+
 
 static esp_err_t drv_sh1106_send_command(uint8_t command) 
 {
@@ -146,7 +150,7 @@ void drv_sh1106_display_image(const uint8_t *image)
 }
 
 #else
-void drv_sh1106_draw_pixel(uint8_t x, uint8_t y, uint8_t color)
+static void drv_sh1106_draw_pixel(uint8_t x, uint8_t y, uint8_t color)
 {
     if (x >= OLED_WIDTH || y >= OLED_HEIGHT)
         return; // Out of bounds
@@ -160,7 +164,7 @@ void drv_sh1106_draw_pixel(uint8_t x, uint8_t y, uint8_t color)
         screen_buffer[index] &= ~bit; // Clear pixel (turn OFF)
 }
 
-void drv_sh1106_update_screen(void)
+static void drv_sh1106_update_screen(void)
 {
     for (uint8_t page = 0; page < (OLED_HEIGHT / 8); page++)
     {
