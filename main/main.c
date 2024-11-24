@@ -59,7 +59,7 @@ void app_main(void)
     // vTaskDelay(1000 / portTICK_PERIOD_MS);
 
 #else
-    drv_sh1106_display_image(logo_uit_image_updated);
+    drv_sh1106_display_image(image_logo_ce);
 #endif
 
 
