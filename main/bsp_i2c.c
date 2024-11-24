@@ -12,10 +12,12 @@ bool bsp_i2c_is_ready(void)
   return (cmd != NULL);  // Directly return the result of the condition
 }
 
-
 bool bsp_i2c_start_transmit(void)
 {
-  return (i2c_master_start(cmd)) ? true : false;
+  if (!bsp_i2c_is_ready)
+    return false;
+  else
+    return (i2c_master_start(cmd) == ESP_OK);
 }
 
 bool bsp_i2c_master_write(uint8_t data)
@@ -32,8 +34,8 @@ bool bsp_i2c_delete_link(void)
 {
   if (cmd != NULL) 
   {
-      i2c_cmd_link_delete(cmd);  // Delete the command link
-      cmd = NULL;                // Clear the pointer to avoid dangling references
+    i2c_cmd_link_delete(cmd);  // Delete the command link
+    cmd = NULL;                // Clear the pointer to avoid dangling references
   }
   return true;  // Return true, as the deletion task is logically complete
 }
