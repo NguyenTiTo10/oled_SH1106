@@ -16,17 +16,22 @@ bool bsp_i2c_start_transmit(void)
 {
   if (!bsp_i2c_is_ready)
     return false;
-  else
-    return (i2c_master_start(cmd) == ESP_OK);
+
+  return (i2c_master_start(cmd) == ESP_OK);
 }
 
 bool bsp_i2c_master_write(uint8_t data)
 {
-  return (i2c_master_write_byte(cmd, data, true)) ? true : false;
+  if (!bsp_i2c_is_ready)
+    return false;
+    
+  return (i2c_master_write_byte(cmd, data, true) == ESP_OK);
 }
 
 bool bsp_i2c_stop_transmit(void)
 {
+  if (!bsp_i2c_is_ready)
+    return false;
   return (i2c_master_stop(cmd)) ? true : false;
 }
 
