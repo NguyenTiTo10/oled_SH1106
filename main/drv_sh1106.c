@@ -58,7 +58,7 @@ static esp_err_t drv_sh1106_write_data(uint8_t data)
 static esp_err_t drv_sh1106_send_command(uint8_t command) 
 {
     bool ret = false;                                     
-    ret = bsp_i2c_send_command((OLED_I2C_ADDR << 1) | I2C_MASTER_WRITE, command);
+    ret = bsp_i2c_master_write(OLED_I2C_ADDR, command);
     return (ret == true) ? ESP_OK : ESP_FAIL;
 }
 #endif
