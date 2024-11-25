@@ -4,6 +4,7 @@
 #include "driver/i2c.h"
 #include "esp_err.h"
 
+bool bsp_i2c_is_device_ready(uint16_t dev_addr);
 bool bsp_i2c_write_mem(uint16_t dev_addr, uint16_t mem_addr, uint16_t data);
 
 

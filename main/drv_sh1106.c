@@ -76,6 +76,9 @@ static esp_err_t drv_sh1106_write_data(uint8_t data)
 
 void drv_sh1106_init(void) 
 {
+    if (!bsp_i2c_is_device_ready(OLED_I2C_ADDR))
+        return;
+        
     uint8_t init_cmds[] = 
     {
         0xAE,       // Display OFF
