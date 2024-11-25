@@ -20,14 +20,6 @@ bool bsp_i2c_start_transmit(void)
   return (i2c_master_start(cmd) == ESP_OK);
 }
 
-bool bsp_i2c_master_write(uint8_t data)
-{
-  if (!bsp_i2c_is_ready)
-    return false;
-    
-  return (i2c_master_write_byte(cmd, data, true) == ESP_OK);
-}
-
 bool bsp_i2c_stop_transmit(void)
 {
   if (!bsp_i2c_is_ready)
@@ -42,7 +34,7 @@ bool bsp_i2c_delete_link(void)
     i2c_cmd_link_delete(cmd);  // Delete the command link
     cmd = NULL;                // Clear the pointer to avoid dangling references
   }
-  return true;  // Return true, as the deletion task is logically complete
+  return true;              // Return true, as the deletion task is logically complete
 }
 
 // static esp_err_t drv_sh1106_send_command(uint8_t command)
@@ -59,6 +51,23 @@ bool bsp_i2c_delete_link(void)
 //     i2c_cmd_link_delete(cmd);                           // Deletes the I2C command link
 //     return ret;                                         // Returns the status of the transaction
 // }
+
+
+bool bsp_i2c_send_command(uint8_t command, uint16_t dev_addr)
+{
+  esp_err_t ret;
+  
+  if (!bsp_i2c_is_ready)
+    return false;
+  
+  bsp_i2c_link_create();
+
+  bsp_i2c_master_write ((dev_addr << 1) | I2C_MASTER_WRITE);
+
+
+
+}
+
 
 // static esp_err_t drv_sh1106_write_data(uint8_t data)
 // {
