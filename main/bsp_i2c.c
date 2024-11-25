@@ -3,17 +3,17 @@
 #define I2C_MASTER_NUM I2C_NUM_0     // I2C port number
 
 
-// static i2c_cmd_handle_t cmd;
+static i2c_cmd_handle_t cmd;
 
 // bool bsp_i2c_link_create(void)
 // {
 //   return (cmd = i2c_cmd_link_create()) ? true : false;
 // }
 
-// bool bsp_i2c_is_ready(void)
-// {
-//   return (cmd == NULL) ? false : true;  // Directly return the result of the condition
-// }
+bool bsp_i2c_is_ready(void)
+{
+  return (cmd == NULL) ? false : true;  // Directly return the result of the condition
+}
 
 // bool bsp_i2c_master_write(uint8_t data)
 // {
@@ -42,7 +42,7 @@
 
 bool bsp_i2c_write_mem(uint16_t dev_addr, uint16_t mem_addr, uint16_t data)
 {
-  i2c_cmd_handle_t cmd = i2c_cmd_link_create();  // Create a new I2C command link
+  cmd = i2c_cmd_link_create();  // Create a new I2C command link
   if (cmd == NULL) 
     return false;  // Return false if command link creation failed
 
