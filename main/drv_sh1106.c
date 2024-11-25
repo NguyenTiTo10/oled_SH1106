@@ -8,8 +8,9 @@
 #include "bsp_i2c.h"
 
 
-#define I2C_MASTER_NUM I2C_NUM_0     // I2C port number
-#define OLED_I2C_ADDR 0x3C           // SH1106 I2C address
+#define I2C_MASTER_NUM  I2C_NUM_0       // I2C port number
+#define OLED_I2C_ADDR   0x3C            // SH1106 I2C address
+#define CONTROL_MODE    0x00            // Control byte: Co = 0 (single byte), D/C# = 0 (command mode)
 
 // OLED resolution macros
 #define OLED_WIDTH 132          // OLED width in pixels
@@ -58,7 +59,7 @@ static esp_err_t drv_sh1106_write_data(uint8_t data)
 static esp_err_t drv_sh1106_send_command(uint8_t command) 
 {
     bool ret = false;                                     
-    ret = bsp_i2c_master_write(OLED_I2C_ADDR, command);
+    ret = bsp_i2c_master_write((OLED_I2C_ADDR << 1) | I2C_MASTER_WRITE, command);
     return (ret == true) ? ESP_OK : ESP_FAIL;
 }
 
