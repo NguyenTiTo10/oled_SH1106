@@ -184,6 +184,6 @@ esp_err_t drv_sh1106_turn_off(void)
     drv_sh1106_send_command(0xAE); // Display OFF
     drv_sh1106_send_command(0x8D); // Charge Pump Setting
     drv_sh1106_send_command(0x10); // Disable charge pump
-    
+
     return ESP_OK;
 }

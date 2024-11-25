@@ -1,12 +1,14 @@
 // File: main/test_sh1106.c
 
 #include <stdio.h>
-#include "drv_sh1106.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-
 #include "driver/i2c.h"
 #include "esp_err.h"
+
+#include "bsp_timer.h"
+#include "bsp_i2c.h"
+
+#include "drv_sh1106.h"
+
 #include "image_128x64.h"
 
 // I2C configuration

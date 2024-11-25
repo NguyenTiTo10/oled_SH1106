@@ -25,6 +25,7 @@
     "bsp_i2c.h": "c",
     "drv_sh1106.h": "c",
     "font8x8_basic.h": "c",
-    "cstdint": "c"
+    "cstdint": "c",
+    "bsp_timer.h": "c"
   }
 }

@@ -7,6 +7,7 @@
 #include "driver/i2c.h"
 #include "esp_err.h"
 #include "bsp_i2c.h"
+#include "bsp_timer.h"
 
 esp_err_t drv_sh1106_turn_off(void);
 esp_err_t drv_sh1106_init(void);
