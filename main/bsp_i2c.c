@@ -5,40 +5,36 @@
 
 static i2c_cmd_handle_t cmd;
 
-// bool bsp_i2c_link_create(void)
-// {
-//   return (cmd = i2c_cmd_link_create()) ? true : false;
-// }
-
 bool bsp_i2c_is_ready(void)
 {
   return (cmd == NULL) ? false : true;  // Directly return the result of the condition
 }
 
-// bool bsp_i2c_master_write(uint8_t data)
-// {
-//   if (!bsp_i2c_is_ready())
-//     return false;
-    
-//   return (i2c_master_write_byte(cmd, data, true) == ESP_OK);
-// }
+bool bsp_i2c_is_device_ready(uint16_t dev_addr) {
+    // Create a command link for the I2C operation
+    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+    if (cmd == NULL) {
+        return false; // Return false if command link creation failed
+    }
 
-// bool bsp_i2c_stop_transmit(void)
-// {
-//   if (!bsp_i2c_is_ready())
-//     return false;
-//   return (i2c_master_stop(cmd)) ? true : false;
-// }
+    // Start the I2C communication
+    i2c_master_start(cmd);
 
-// bool bsp_i2c_delete_link(void)
-// {
-//   if (cmd != NULL) 
-//   {
-//     i2c_cmd_link_delete(cmd);  // Delete the command link
-//     cmd = NULL;                // Clear the pointer to avoid dangling references
-//   }
-//   return true;              // Return true, as the deletion task is logically complete
-// }
+    // Send the device address with the write bit
+    i2c_master_write_byte(cmd, (dev_addr << 1) | I2C_MASTER_WRITE, true);
+
+    // Stop the I2C communication
+    i2c_master_stop(cmd);
+
+    // Execute the I2C transaction
+    esp_err_t ret = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, 1000 / portTICK_PERIOD_MS);
+
+    // Delete the command link
+    i2c_cmd_link_delete(cmd);
+
+    // Check if the device acknowledged the transaction
+    return (ret == ESP_OK);
+}
 
 bool bsp_i2c_write_mem(uint16_t dev_addr, uint16_t mem_addr, uint16_t data)
 {
