@@ -12,7 +12,7 @@ bool bsp_i2c_is_ready(void)
 
 bool bsp_i2c_is_device_ready(uint16_t dev_addr) 
 {
-  i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+  cmd = i2c_cmd_link_create();
   if (cmd == NULL) 
       return false; 
 
