@@ -93,8 +93,11 @@ esp_err_t drv_sh1106_init(void)
         0xA6,       // Set normal display (non-inverted)
         0xAF        // Display ON
     };
-    for (int i = 0; i < sizeof(init_cmds); i++) {
-        drv_sh1106_send_command(init_cmds[i]);
+    for (int i = 0; i < sizeof(init_cmds); i++) 
+    {
+        bool ret = drv_sh1106_send_command(init_cmds[i]);
+        if (ret != ESP_OK) 
+            return ret; // Return the error code if a command fails
     }
 
     return ESP_OK;
