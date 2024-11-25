@@ -40,11 +40,10 @@ void app_main(void)
     else 
         printf("Failed to initialize I2C.\n");
 
-    drv_sh1106_init();
-    printf("SH1106 initialized successfully.\n");
+    if (drv_sh1106_init() == ESP_OK)
+        printf("Oled SH1106 initialized successfully.\n");
 
     drv_sh1106_clear_screen();
-    vTaskDelay(500 / portTICK_PERIOD_MS);
 
 // #define DISPLAY_TEXT
 #ifdef DISPLAY_TEXT
@@ -64,9 +63,12 @@ void app_main(void)
 
     vTaskDelay(3000 / portTICK_PERIOD_MS);
     drv_sh1106_clear_screen();
-    vTaskDelay(500 / portTICK_PERIOD_MS);
 
     drv_sh1106_display_image(image_logo_ce);
+
+    vTaskDelay(3000 / portTICK_PERIOD_MS);
+
+    drv_sh1106_turn_off();
 
 #endif
 

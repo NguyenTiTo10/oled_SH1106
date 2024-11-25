@@ -8,7 +8,7 @@
 #include "esp_err.h"
 #include "bsp_i2c.h"
 
-
+esp_err_t drv_sh1106_turn_off(void);
 esp_err_t drv_sh1106_init(void);
 esp_err_t drv_sh1106_clear_screen(void);
 esp_err_t drv_sh1106_write_string(uint8_t x, uint8_t y, const char *str);
