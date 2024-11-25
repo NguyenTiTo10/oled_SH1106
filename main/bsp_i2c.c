@@ -1,5 +1,8 @@
 #include "bsp_i2c.h"
 
+#define I2C_MASTER_NUM I2C_NUM_0     // I2C port number
+
+
 static i2c_cmd_handle_t cmd;
 
 bool bsp_i2c_link_create(void)
@@ -20,6 +23,14 @@ bool bsp_i2c_start_transmit(void)
   return (i2c_master_start(cmd) == ESP_OK);
 }
 
+bool bsp_i2c_master_write(uint8_t data)
+{
+  if (!bsp_i2c_is_ready)
+    return false;
+    
+  return (i2c_master_write_byte(cmd, data, true) == ESP_OK);
+}
+
 bool bsp_i2c_stop_transmit(void)
 {
   if (!bsp_i2c_is_ready)
@@ -37,36 +48,26 @@ bool bsp_i2c_delete_link(void)
   return true;              // Return true, as the deletion task is logically complete
 }
 
-// static esp_err_t drv_sh1106_send_command(uint8_t command)
-// {
-//     i2c_cmd_handle_t cmd = i2c_cmd_link_create();       // Creates a new I2C command link
-//     i2c_master_start(cmd);                              // Starts an I2C transmission
-//     i2c_master_write_byte(cmd, (OLED_I2C_ADDR << 1) | I2C_MASTER_WRITE, true);
-//                                                         // Sends OLED address with WRITE mode
-//     i2c_master_write_byte(cmd, 0x00, true);             // Control byte: Co = 0 (single byte), D/C# = 0 (command mode)
-//     i2c_master_write_byte(cmd, command, true);          // Send the actual command
-//     i2c_master_stop(cmd);                               // Ends the I2C transmission
-//     esp_err_t ret = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, 1000 / portTICK_PERIOD_MS);
-//                                                         // Executes the I2C transaction
-//     i2c_cmd_link_delete(cmd);                           // Deletes the I2C command link
-//     return ret;                                         // Returns the status of the transaction
-// }
-
-
 bool bsp_i2c_send_command(uint8_t command, uint16_t dev_addr)
 {
-  esp_err_t ret;
-  
-  if (!bsp_i2c_is_ready)
+  i2c_cmd_handle_t cmd = i2c_cmd_link_create();       // Creates a new I2C command link
+  i2c_master_start(cmd);                              // Starts an I2C transmission
+  i2c_master_write_byte(cmd, (dev_addr << 1) | I2C_MASTER_WRITE, true);
+                                                      // Sends OLED address with WRITE mode
+  i2c_master_write_byte(cmd, 0x00, true);             // Control byte: Co = 0 (single byte), D/C# = 0 (command mode)
+  i2c_master_write_byte(cmd, command, true);          // Send the actual command
+  i2c_master_stop(cmd);                               // Ends the I2C transmission
+  esp_err_t ret = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, 1000 / portTICK_PERIOD_MS);
+                                                      // Executes the I2C transaction
+  if (ret != ESP_OK)
     return false;
-  
-  bsp_i2c_link_create();
 
-  bsp_i2c_master_write ((dev_addr << 1) | I2C_MASTER_WRITE);
-
-
-
+  i2c_cmd_link_delete(cmd);                           // Deletes the I2C command link
+  return true;                                         // Returns the status of the transaction
 }
+
+
+
 
 
 // static esp_err_t drv_sh1106_write_data(uint8_t data)
