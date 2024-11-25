@@ -3,17 +3,17 @@
 #define I2C_MASTER_NUM I2C_NUM_0     // I2C port number
 
 
-static i2c_cmd_handle_t cmd;
+// static i2c_cmd_handle_t cmd;
 
-bool bsp_i2c_link_create(void)
-{
-  return (cmd = i2c_cmd_link_create()) ? true : false;
-}
+// bool bsp_i2c_link_create(void)
+// {
+//   return (cmd = i2c_cmd_link_create()) ? true : false;
+// }
 
-bool bsp_i2c_is_ready(void)
-{
-  return (cmd == NULL) ? false : true;  // Directly return the result of the condition
-}
+// bool bsp_i2c_is_ready(void)
+// {
+//   return (cmd == NULL) ? false : true;  // Directly return the result of the condition
+// }
 
 // bool bsp_i2c_master_write(uint8_t data)
 // {
@@ -23,22 +23,22 @@ bool bsp_i2c_is_ready(void)
 //   return (i2c_master_write_byte(cmd, data, true) == ESP_OK);
 // }
 
-bool bsp_i2c_stop_transmit(void)
-{
-  if (!bsp_i2c_is_ready())
-    return false;
-  return (i2c_master_stop(cmd)) ? true : false;
-}
+// bool bsp_i2c_stop_transmit(void)
+// {
+//   if (!bsp_i2c_is_ready())
+//     return false;
+//   return (i2c_master_stop(cmd)) ? true : false;
+// }
 
-bool bsp_i2c_delete_link(void)
-{
-  if (cmd != NULL) 
-  {
-    i2c_cmd_link_delete(cmd);  // Delete the command link
-    cmd = NULL;                // Clear the pointer to avoid dangling references
-  }
-  return true;              // Return true, as the deletion task is logically complete
-}
+// bool bsp_i2c_delete_link(void)
+// {
+//   if (cmd != NULL) 
+//   {
+//     i2c_cmd_link_delete(cmd);  // Delete the command link
+//     cmd = NULL;                // Clear the pointer to avoid dangling references
+//   }
+//   return true;              // Return true, as the deletion task is logically complete
+// }
 
 bool bsp_i2c_send_command(uint16_t dev_addr, uint8_t command)
 {

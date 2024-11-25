@@ -39,16 +39,6 @@ static esp_err_t drv_sh1106_send_command(uint8_t command)
     i2c_cmd_link_delete(cmd);                           // Deletes the I2C command link
     return ret;                                         // Returns the status of the transaction
 }
-#else
-static esp_err_t drv_sh1106_send_command(uint8_t command) 
-{
-    bool ret = false;                                     
-    ret = bsp_i2c_send_command((OLED_I2C_ADDR << 1) | I2C_MASTER_WRITE, command);
-    return (ret == true) ? ESP_OK : ESP_FAIL;
-}
-#endif
-
-
 
 static esp_err_t drv_sh1106_write_data(uint8_t data) 
 {
@@ -64,6 +54,18 @@ static esp_err_t drv_sh1106_write_data(uint8_t data)
     i2c_cmd_link_delete(cmd);                           // Delete the command link
     return ret;                                         // Return status
 }
+#else
+static esp_err_t drv_sh1106_send_command(uint8_t command) 
+{
+    bool ret = false;                                     
+    ret = bsp_i2c_send_command((OLED_I2C_ADDR << 1) | I2C_MASTER_WRITE, command);
+    return (ret == true) ? ESP_OK : ESP_FAIL;
+}
+#endif
+
+
+
+
 
 
 void drv_sh1106_init(void) 
