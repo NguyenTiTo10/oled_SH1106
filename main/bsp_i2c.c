@@ -12,28 +12,20 @@ bool bsp_i2c_link_create(void)
 
 bool bsp_i2c_is_ready(void)
 {
-  return (cmd != NULL);  // Directly return the result of the condition
+  return (cmd == NULL) ? false : true;  // Directly return the result of the condition
 }
 
-bool bsp_i2c_start_transmit(void)
-{
-  if (!bsp_i2c_is_ready)
-    return false;
-
-  return (i2c_master_start(cmd) == ESP_OK);
-}
-
-bool bsp_i2c_master_write(uint8_t data)
-{
-  if (!bsp_i2c_is_ready)
-    return false;
+// bool bsp_i2c_master_write(uint8_t data)
+// {
+//   if (!bsp_i2c_is_ready())
+//     return false;
     
-  return (i2c_master_write_byte(cmd, data, true) == ESP_OK);
-}
+//   return (i2c_master_write_byte(cmd, data, true) == ESP_OK);
+// }
 
 bool bsp_i2c_stop_transmit(void)
 {
-  if (!bsp_i2c_is_ready)
+  if (!bsp_i2c_is_ready())
     return false;
   return (i2c_master_stop(cmd)) ? true : false;
 }
@@ -48,23 +40,29 @@ bool bsp_i2c_delete_link(void)
   return true;              // Return true, as the deletion task is logically complete
 }
 
-bool bsp_i2c_send_command(uint8_t command, uint16_t dev_addr)
+bool bsp_i2c_send_command(uint16_t dev_addr, uint8_t command)
 {
-  i2c_cmd_handle_t cmd = i2c_cmd_link_create();       // Creates a new I2C command link
-  i2c_master_start(cmd);                              // Starts an I2C transmission
-  i2c_master_write_byte(cmd, (dev_addr << 1) | I2C_MASTER_WRITE, true);
-                                                      // Sends OLED address with WRITE mode
-  i2c_master_write_byte(cmd, 0x00, true);             // Control byte: Co = 0 (single byte), D/C# = 0 (command mode)
-  i2c_master_write_byte(cmd, command, true);          // Send the actual command
-  i2c_master_stop(cmd);                               // Ends the I2C transmission
-  esp_err_t ret = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, 1000 / portTICK_PERIOD_MS);
-                                                      // Executes the I2C transaction
-  if (ret != ESP_OK)
-    return false;
+  i2c_cmd_handle_t cmd = i2c_cmd_link_create();  // Create a new I2C command link
+  if (cmd == NULL) 
+    return false;  // Return false if command link creation failed
 
-  i2c_cmd_link_delete(cmd);                           // Deletes the I2C command link
-  return true;                                         // Returns the status of the transaction
+  // Start the I2C transmission
+  i2c_master_start(cmd);
+  i2c_master_write_byte(cmd, (dev_addr << 1) | I2C_MASTER_WRITE, true); // Send device address with WRITE mode
+  i2c_master_write_byte(cmd, 0x00, true);  // Control byte: Co = 0, D/C# = 0
+  i2c_master_write_byte(cmd, command, true);  // Send the actual command
+  i2c_master_stop(cmd);  // End the I2C transmission
+
+  // Execute the I2C command
+  esp_err_t ret = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, 1000 / portTICK_PERIOD_MS);
+
+  // Delete the command link to free memory
+  i2c_cmd_link_delete(cmd);
+
+  // Return true if transaction was successful, false otherwise
+  return (ret == ESP_OK);
 }
+
 
 
 

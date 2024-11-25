@@ -23,7 +23,8 @@ static void drv_sh1106_draw_pixel(uint8_t x, uint8_t y, uint8_t color);
 static void drv_sh1106_update_screen(void);
 
 
-
+// #define VERSION_1
+#ifdef VERSION_1
 static esp_err_t drv_sh1106_send_command(uint8_t command) 
 {
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();       // Creates a new I2C command link
@@ -38,6 +39,15 @@ static esp_err_t drv_sh1106_send_command(uint8_t command)
     i2c_cmd_link_delete(cmd);                           // Deletes the I2C command link
     return ret;                                         // Returns the status of the transaction
 }
+#else
+static esp_err_t drv_sh1106_send_command(uint8_t command) 
+{
+    bool ret = false;                                     
+    ret = bsp_i2c_send_command((OLED_I2C_ADDR << 1) | I2C_MASTER_WRITE, command);
+    return (ret == true) ? ESP_OK : ESP_FAIL;
+}
+#endif
+
 
 
 static esp_err_t drv_sh1106_write_data(uint8_t data) 
