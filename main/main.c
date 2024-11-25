@@ -12,10 +12,10 @@
 #include "image_128x64.h"
 
 // I2C configuration
-#define I2C_MASTER_SCL_IO 22         // GPIO for SCL
-#define I2C_MASTER_SDA_IO 21         // GPIO for SDA
-#define I2C_MASTER_NUM I2C_NUM_0     // I2C port number
-#define I2C_MASTER_FREQ_HZ 400000    // I2C clock frequency
+#define I2C_MASTER_SCL_IO       22              // GPIO for SCL
+#define I2C_MASTER_SDA_IO       21              // GPIO for SDA
+#define I2C_MASTER_NUM          I2C_NUM_0       // I2C port number
+#define I2C_MASTER_FREQ_HZ      400000          // I2C clock frequency
 
 static esp_err_t i2c_master_init(void);
 
@@ -63,16 +63,16 @@ void app_main(void)
 #else
     drv_sh1106_display_image(image_logo_uit);
 
-    vTaskDelay(3000 / portTICK_PERIOD_MS);
+    bsp_delay (3000);
+
     drv_sh1106_clear_screen();
 
     drv_sh1106_display_image(image_logo_ce);
 
-    vTaskDelay(3000 / portTICK_PERIOD_MS);
+    bsp_delay (3000);
 
     drv_sh1106_turn_off();
 
 #endif
-
 
 }
