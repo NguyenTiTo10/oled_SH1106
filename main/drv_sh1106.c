@@ -10,7 +10,10 @@
 
 #define I2C_MASTER_NUM  I2C_NUM_0       // I2C port number
 #define OLED_I2C_ADDR   0x3C            // SH1106 I2C address
-#define CONTROL_MODE    0x00            // Control byte: Co = 0 (single byte), D/C# = 0 (command mode)
+#define COMMAND_MODE    0x00            // Control byte: Co = 0 (single byte), D/C# = 0 
+                                        // Send command to oled
+#define DATA_MODE       0x40            // Control byte: Co = 0, D/C# = 1 (data mode)
+                                        // Send data to oled, intergrate with represent pixel data
 
 // OLED resolution macros
 #define OLED_WIDTH 132          // OLED width in pixels
