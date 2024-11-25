@@ -40,7 +40,7 @@
 //   return true;              // Return true, as the deletion task is logically complete
 // }
 
-bool bsp_i2c_master_write(uint16_t dev_addr, uint16_t mem_addr, uint8_t data)
+bool bsp_i2c_write_mem(uint16_t dev_addr, uint16_t mem_addr, uint8_t data)
 {
   i2c_cmd_handle_t cmd = i2c_cmd_link_create();  // Create a new I2C command link
   if (cmd == NULL) 
@@ -48,7 +48,7 @@ bool bsp_i2c_master_write(uint16_t dev_addr, uint16_t mem_addr, uint8_t data)
 
   // Start the I2C transmission
   i2c_master_start(cmd);
-  i2c_master_write_byte(cmd, (dev_addr << 1) | I2C_MASTER_WRITE, true); // Send device address with WRITE mode
+  i2c_master_write_byte(cmd, dev_addr, true); // Send device address with WRITE mode
   i2c_master_write_byte(cmd, mem_addr, true);  // Control byte: Co = 0, D/C# = 0
   i2c_master_write_byte(cmd, data, true);  // Send the actual command
   i2c_master_stop(cmd);  // End the I2C transmission
