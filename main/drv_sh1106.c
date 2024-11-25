@@ -13,7 +13,7 @@
 #define COMMAND_MODE    0x00            // Control byte: Co = 0 (single byte), D/C# = 0 
                                         // Send command to oled
 #define DATA_MODE       0x40            // Control byte: Co = 0, D/C# = 1 (data mode)
-                                        // Send data to oled, intergrate with represent pixel data
+                                        // Represent pixel data to display
 
 // OLED resolution macros
 #define OLED_WIDTH 132          // OLED width in pixels
@@ -27,7 +27,7 @@ static void drv_sh1106_draw_pixel(uint8_t x, uint8_t y, uint8_t color);
 static void drv_sh1106_update_screen(void);
 
 
-#define VERSION_1
+// #define VERSION_1
 #ifdef VERSION_1
 static esp_err_t drv_sh1106_send_command(uint8_t command) 
 {
@@ -62,22 +62,17 @@ static esp_err_t drv_sh1106_write_data(uint8_t data)
 static esp_err_t drv_sh1106_send_command(uint8_t command) 
 {
     bool ret = false;                                     
-    ret = bsp_i2c_master_write((OLED_I2C_ADDR << 1) | I2C_MASTER_WRITE, command);
+    ret = bsp_i2c_write_mem((OLED_I2C_ADDR << 1) | I2C_MASTER_WRITE, COMMAND_MODE, command);
     return (ret == true) ? ESP_OK : ESP_FAIL;
 }
 
 static esp_err_t drv_sh1106_write_data(uint8_t data)
 {
   bool ret = false;                                     
-  ret = bsp_i2c_master_write(0x40, data);
+  ret = bsp_i2c_write_mem((OLED_I2C_ADDR << 1) | I2C_MASTER_WRITE, DATA_MODE, data);
   return (ret == true) ? ESP_OK : ESP_FAIL;
 }  
 #endif
-
-
-
-
-
 
 void drv_sh1106_init(void) 
 {

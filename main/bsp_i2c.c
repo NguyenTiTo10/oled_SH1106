@@ -40,7 +40,7 @@
 //   return true;              // Return true, as the deletion task is logically complete
 // }
 
-bool bsp_i2c_write_mem(uint16_t dev_addr, uint16_t mem_addr, uint8_t data)
+bool bsp_i2c_write_mem(uint16_t dev_addr, uint16_t mem_addr, uint16_t data)
 {
   i2c_cmd_handle_t cmd = i2c_cmd_link_create();  // Create a new I2C command link
   if (cmd == NULL) 
