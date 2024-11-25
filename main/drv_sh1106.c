@@ -23,38 +23,6 @@ static esp_err_t drv_sh1106_draw_pixel(uint8_t x, uint8_t y, uint8_t color);
 static esp_err_t drv_sh1106_update_screen(void);
 
 
-// #define VERSION_1
-#ifdef VERSION_1
-static esp_err_t drv_sh1106_send_command(uint8_t command) 
-{
-    i2c_cmd_handle_t cmd = i2c_cmd_link_create();       // Creates a new I2C command link
-    i2c_master_start(cmd);                              // Starts an I2C transmission
-    i2c_master_write_byte(cmd, (OLED_I2C_ADDR << 1) | I2C_MASTER_WRITE, true); 
-                                                        // Sends OLED address with WRITE mode
-    i2c_master_write_byte(cmd, 0x00, true);             // Control byte: Co = 0 (single byte), D/C# = 0 (command mode)
-    i2c_master_write_byte(cmd, command, true);          // Send the actual command
-    i2c_master_stop(cmd);                               // Ends the I2C transmission
-    esp_err_t ret = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, 1000 / portTICK_PERIOD_MS); 
-                                                        // Executes the I2C transaction
-    i2c_cmd_link_delete(cmd);                           // Deletes the I2C command link
-    return ret;                                         // Returns the status of the transaction
-}
-
-static esp_err_t drv_sh1106_write_data(uint8_t data) 
-{
-    i2c_cmd_handle_t cmd = i2c_cmd_link_create();       // Create I2C command link
-    i2c_master_start(cmd);                              // Start I2C transmission
-    i2c_master_write_byte(cmd, (OLED_I2C_ADDR << 1) | I2C_MASTER_WRITE, true); 
-                                                        // OLED address in write mode
-    i2c_master_write_byte(cmd, 0x40, true);             // Control byte: Co = 0, D/C# = 1 (data mode)
-    i2c_master_write_byte(cmd, data, true);             // Send the data byte
-    i2c_master_stop(cmd);                               // Stop I2C transmission
-    esp_err_t ret = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, 1000 / portTICK_PERIOD_MS); 
-                                                        // Execute the I2C transaction
-    i2c_cmd_link_delete(cmd);                           // Delete the command link
-    return ret;                                         // Return status
-}
-#else
 static esp_err_t drv_sh1106_send_command(uint8_t command) 
 {
     bool ret = false;                                     
@@ -67,8 +35,7 @@ static esp_err_t drv_sh1106_write_data(uint8_t data)
   bool ret = false;                                     
   ret = bsp_i2c_write_mem((OLED_I2C_ADDR << 1) | I2C_MASTER_WRITE, DATA_MODE, data);
   return (ret == true) ? ESP_OK : ESP_FAIL;
-}  
-#endif
+}
 
 esp_err_t drv_sh1106_init(void) 
 {
@@ -164,26 +131,6 @@ esp_err_t drv_sh1106_write_string(uint8_t x, uint8_t y, const char *str)
     return ESP_OK; // Return success if all characters are written
 }
 
-// #define DISPLAY_IMAGE_VERSION_1
-
-#ifdef DISPLAY_IMAGE_VERSION_1
-esp_err_t drv_sh1106_display_image(const uint8_t *image) 
-{
-    for (uint8_t page = 0; page < (OLED_HEIGHT / 8); page++) 
-    {
-        drv_sh1106_send_command(0xB0 + page); // Set page address
-        drv_sh1106_send_command(0x00);       // Set lower column address
-        drv_sh1106_send_command(0x10);       // Set higher column address
-        
-        for (uint8_t col = 0; col < OLED_WIDTH; col++) 
-        {
-            // Send image data for the current page and column
-            drv_sh1106_write_data(image[page * OLED_WIDTH + col]);
-        }
-    }
-}
-
-#else
 static esp_err_t drv_sh1106_draw_pixel(uint8_t x, uint8_t y, uint8_t color)
 {
     if (x >= OLED_WIDTH || y >= OLED_HEIGHT)
@@ -231,5 +178,3 @@ esp_err_t drv_sh1106_display_image(const uint8_t *image)
 
     return ESP_OK;
 }
-
-#endif
