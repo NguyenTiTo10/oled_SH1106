@@ -4,6 +4,9 @@
 #define DRV_SH1106_H
 
 #include <stdint.h>
+#include "driver/i2c.h"
+#include "esp_err.h"
+#include "bsp_i2c.h"
 
 
 void drv_sh1106_init(void);
