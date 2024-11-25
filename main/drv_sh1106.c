@@ -70,10 +70,10 @@ static esp_err_t drv_sh1106_write_data(uint8_t data)
 }  
 #endif
 
-void drv_sh1106_init(void) 
+esp_err_t drv_sh1106_init(void) 
 {
     if (!bsp_i2c_is_device_ready(OLED_I2C_ADDR))
-        return;
+        return ESP_ERR_INVALID_ARG;
 
     uint8_t init_cmds[] = 
     {
@@ -96,9 +96,11 @@ void drv_sh1106_init(void)
     for (int i = 0; i < sizeof(init_cmds); i++) {
         drv_sh1106_send_command(init_cmds[i]);
     }
+
+    return ESP_OK;
 }
 
-void drv_sh1106_clear_screen(void) 
+esp_err_t drv_sh1106_clear_screen(void) 
 {
     for (uint8_t page = 0; page < (OLED_HEIGHT / 8); page++) 
     {
@@ -109,12 +111,14 @@ void drv_sh1106_clear_screen(void)
             drv_sh1106_write_data(0x00); // Clear column data
         }
     }
+
+    return ESP_OK;
 }
 
-static void drv_sh1106_write_char(uint8_t x, uint8_t y, char c) 
+static esp_err_t drv_sh1106_write_char(uint8_t x, uint8_t y, char c) 
 {
     if (x >= OLED_WIDTH || y >= (OLED_HEIGHT / 8)) 
-        return; // Prevent out-of-bounds drawing
+        return ESP_ERR_INVALID_ARG; // Prevent out-of-bounds drawing
 
     uint8_t adjusted_x = x + 2; // Adjust by 2 to account for the SH1106 column offset
 
@@ -126,31 +130,41 @@ static void drv_sh1106_write_char(uint8_t x, uint8_t y, char c)
     {
         drv_sh1106_write_data(font8x8_basic_tr[(uint8_t)c][i]);
     }
+
+    return ESP_OK;
 }
 
 
-void drv_sh1106_write_string(uint8_t x, uint8_t y, const char *str) 
+esp_err_t drv_sh1106_write_string(uint8_t x, uint8_t y, const char *str) 
 {
-    uint8_t start_x = x + 2; // Adjust start position for SH1106 offset
+    if (!str) 
+        return ESP_ERR_INVALID_ARG;      // Return error if input string is NULL
 
+    uint8_t start_x = x + 2;            // Adjust start position for SH1106 offset
     while (*str) 
     {
-        drv_sh1106_write_char(start_x, y, *str++);
+        esp_err_t ret = drv_sh1106_write_char(start_x, y, *str++);
+        if (ret != ESP_OK)
+            return ret; // Return the error if writing a character fails
+
         start_x += 8; // Move to the next character position
         if (start_x >= OLED_WIDTH) 
-        { // Wrap to the next line if necessary
+        { 
+            // Wrap to the next line if necessary
             start_x = 2; // Reset to adjusted start
             y++;
             if (y >= (OLED_HEIGHT / 8)) 
-                break; // Stop if out of vertical bounds
+                return ESP_ERR_NO_MEM; // Return error if out of vertical bounds
         }
     }
+
+    return ESP_OK; // Return success if all characters are written
 }
 
 // #define DISPLAY_IMAGE_VERSION_1
 
 #ifdef DISPLAY_IMAGE_VERSION_1
-void drv_sh1106_display_image(const uint8_t *image) 
+esp_err_t drv_sh1106_display_image(const uint8_t *image) 
 {
     for (uint8_t page = 0; page < (OLED_HEIGHT / 8); page++) 
     {
@@ -199,7 +213,7 @@ static esp_err_t drv_sh1106_update_screen(void)
     return ESP_OK;
 }
 
-void drv_sh1106_display_image(const uint8_t *image)
+esp_err_t drv_sh1106_display_image(const uint8_t *image)
 {
     for (uint8_t y = 0; y < OLED_HEIGHT; y++)
     {
@@ -211,6 +225,8 @@ void drv_sh1106_display_image(const uint8_t *image)
         }
     }
     drv_sh1106_update_screen(); // Send the updated buffer to the display
+
+    return ESP_OK;
 }
 
 #endif
