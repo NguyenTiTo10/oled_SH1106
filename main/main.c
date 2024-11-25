@@ -12,10 +12,10 @@
 #include "image_128x64.h"
 
 // I2C configuration
-#define I2C_MASTER_SCL_IO       22              // GPIO for SCL
-#define I2C_MASTER_SDA_IO       21              // GPIO for SDA
-#define I2C_MASTER_NUM          I2C_NUM_0       // I2C port number
-#define I2C_MASTER_FREQ_HZ      400000          // I2C clock frequency
+#define I2C_MASTER_SCL_IO       22              
+#define I2C_MASTER_SDA_IO       21              
+#define I2C_MASTER_NUM          I2C_NUM_0       
+#define I2C_MASTER_FREQ_HZ      400000          
 
 static esp_err_t i2c_master_init(void);
 
@@ -30,8 +30,8 @@ static esp_err_t i2c_master_init(void)
         .scl_pullup_en = GPIO_PULLUP_ENABLE,
         .master.clk_speed = I2C_MASTER_FREQ_HZ,
     };
-    i2c_param_config(I2C_MASTER_NUM, &conf);                                // Apply the configuration         
-    return i2c_driver_install(I2C_MASTER_NUM, conf.mode, 0, 0, 0);          // Install the I2C driver
+    i2c_param_config(I2C_MASTER_NUM, &conf);                                      
+    return i2c_driver_install(I2C_MASTER_NUM, conf.mode, 0, 0, 0);          
 }
 
 void app_main(void) 
@@ -49,16 +49,12 @@ void app_main(void)
 
 // #define DISPLAY_TEXT
 #ifdef DISPLAY_TEXT
-    // Test displaying a string on the OLED
+    // Test displaying text on the OLED
     drv_sh1106_write_string(0, 0, "Hello, ESP-IDF!");
     drv_sh1106_write_string(0, 1, "Multiline OK!");
     drv_sh1106_write_string(0, 5, "Another line.!");
 
-    vTaskDelay(3000 / portTICK_PERIOD_MS);
-
-    // Fill the display with a pattern
-    // drv_sh1106_fill_screen(0xAA); // Example pattern
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
+    bsp_delay (3000);
 
 #else
     drv_sh1106_display_image(image_logo_uit);
@@ -71,8 +67,8 @@ void app_main(void)
 
     bsp_delay (3000);
 
-    drv_sh1106_turn_off();
-
 #endif
+
+    drv_sh1106_turn_off();
 
 }
