@@ -161,10 +161,14 @@ static esp_err_t drv_sh1106_update_screen(void)
         drv_sh1106_send_command(0x00);        // Set lower column address
         drv_sh1106_send_command(0x10);        // Set higher column address
 
-        for (uint8_t col = 0; col < OLED_WIDTH; col++)
-        {
-            drv_sh1106_write_data(screen_buffer[page * OLED_WIDTH + col]);
-        }
+        // for (uint8_t col = 0; col < OLED_WIDTH; col++)
+        // {
+        //     drv_sh1106_write_data(screen_buffer[page * OLED_WIDTH + col]);
+        // }
+
+        uint8_t *page_buffer = &screen_buffer[page * OLED_WIDTH];
+        esp_err_t  ret = drv_sh1106_write_data_updated(page_buffer, OLED_WIDTH);
+        if (ret != ESP_OK) return ret;
     }
     return ESP_OK;
 }

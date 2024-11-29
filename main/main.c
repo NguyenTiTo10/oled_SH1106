@@ -47,7 +47,7 @@ void app_main(void)
 
     drv_sh1106_clear_screen_updated();
 
-#define DISPLAY_TEXT
+// #define DISPLAY_TEXT
 #ifdef DISPLAY_TEXT
     // Test displaying text on the OLED
     drv_sh1106_write_string(0, 0, "Hello, ESP-IDF!");
@@ -62,6 +62,8 @@ void app_main(void)
     bsp_delay (3000);
 
     drv_sh1106_clear_screen_updated();
+
+    bsp_delay (3000);
 
     drv_sh1106_display_image(image_logo_ce);
 
