@@ -207,7 +207,7 @@ esp_err_t drv_sh1106_clear_screen_updated(void)
         drv_sh1106_send_command(0x10);       // Set higher column address
 
         // Write a full empty buffer for this page
-        drv_sh1106_write_data_block(empty_buffer, OLED_WIDTH);
+        drv_sh1106_write_data_updated(empty_buffer, OLED_WIDTH);
     }
 
     return ESP_OK;
