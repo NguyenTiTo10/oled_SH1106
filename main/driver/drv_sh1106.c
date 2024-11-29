@@ -26,7 +26,7 @@ static esp_err_t drv_sh1106_update_screen(void);
 static esp_err_t drv_sh1106_send_command(uint8_t command) 
 {
     bool ret = false;                                     
-    ret = bsp_i2c_write_mem((OLED_I2C_ADDR << 1) | I2C_MASTER_WRITE, COMMAND_MODE, command);
+    ret = bsp_i2c_write_data((OLED_I2C_ADDR << 1) | I2C_MASTER_WRITE, COMMAND_MODE, &command, 1);
     return (ret == true) ? ESP_OK : ESP_FAIL;
 }
 
@@ -167,7 +167,7 @@ static esp_err_t drv_sh1106_update_screen(void)
         // }
 
         uint8_t *page_buffer = &screen_buffer[page * OLED_WIDTH];
-        esp_err_t  ret = drv_sh1106_write_data_updated(page_buffer, OLED_WIDTH);
+        esp_err_t ret = drv_sh1106_write_data_updated(page_buffer, OLED_WIDTH);
         if (ret != ESP_OK) return ret;
     }
     return ESP_OK;
