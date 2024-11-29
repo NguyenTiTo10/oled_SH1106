@@ -48,4 +48,50 @@ bool bsp_i2c_write_mem(uint16_t dev_addr, uint16_t mem_addr, uint16_t data)
   // Return true if transaction was successful, false otherwise
   return (ret == ESP_OK);
 }
+
+
+
+
+
+
+
+
+
+#define SH1106_I2C_ADDRESS 0x3C
+#define I2C_PORT I2C_NUM_0 // Change based on your setup
+
+esp_err_t drv_sh1106_write_data_block(const uint8_t *data, size_t length)
+{
+    if (data == NULL || length == 0) 
+        return ESP_ERR_INVALID_ARG;
+
+    // Create an I2C command link
+    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+    if (cmd == NULL) {
+        return ESP_ERR_NO_MEM;
+    }
+
+    // Start I2C communication
+    i2c_master_start(cmd);
+
+    // Send the OLED's I2C address with the write bit
+    i2c_master_write_byte(cmd, (SH1106_I2C_ADDRESS << 1) | I2C_MASTER_WRITE, true);
+
+    // Send the control byte for data transmission (0x40 for SH1106)
+    i2c_master_write_byte(cmd, 0x40, true);
+
+    // Send the data block
+    i2c_master_write(cmd, data, length, true);
+
+    // Stop I2C communication
+    i2c_master_stop(cmd);
+
+    // Execute the I2C commands
+    esp_err_t ret = i2c_master_cmd_begin(I2C_PORT, cmd, pdMS_TO_TICKS(1000));
+
+    // Delete the I2C command link
+    i2c_cmd_link_delete(cmd);
+
+    return ret;
+}
                       
