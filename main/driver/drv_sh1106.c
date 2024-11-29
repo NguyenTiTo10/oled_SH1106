@@ -18,7 +18,7 @@
 static uint8_t screen_buffer[OLED_WIDTH * (OLED_HEIGHT / 8)];   // Frame buffer
 
 static esp_err_t drv_sh1106_send_command(uint8_t command);
-static esp_err_t drv_sh1106_write_data(uint8_t data);
+static esp_err_t drv_sh1106_write_data (uint8_t* data, size_t length);
 static esp_err_t drv_sh1106_draw_pixel(uint8_t x, uint8_t y, uint8_t color);
 static esp_err_t drv_sh1106_update_screen(void);
 
@@ -30,7 +30,7 @@ static esp_err_t drv_sh1106_send_command(uint8_t command)
     return (ret == true) ? ESP_OK : ESP_FAIL;
 }
 
-esp_err_t drv_sh1106_write_data_updated (uint8_t* data, size_t length)
+static esp_err_t drv_sh1106_write_data (uint8_t* data, size_t length)
 {
     bool ret = false;                                     
     ret = bsp_i2c_write_mem((OLED_I2C_ADDR << 1) | I2C_MASTER_WRITE, DATA_MODE, data, length);
@@ -70,21 +70,6 @@ esp_err_t drv_sh1106_init(void)
     return ESP_OK;
 }
 
-// esp_err_t drv_sh1106_clear_screen(void) 
-// {
-//     for (uint8_t page = 0; page < (OLED_HEIGHT / 8); page++) 
-//     {
-//         drv_sh1106_send_command(0xB0 + page); // Set page address
-//         drv_sh1106_send_command(0x00); // Set lower column address
-//         drv_sh1106_send_command(0x10); // Set higher column address
-//         for (uint8_t col = 0; col < OLED_WIDTH; col++) {
-//             drv_sh1106_write_data(0x00); // Clear column data
-//         }
-//     }
-
-//     return ESP_OK;
-// }
-
 static esp_err_t drv_sh1106_write_char(uint8_t x, uint8_t y, char c) 
 {
     if (x >= OLED_WIDTH || y >= (OLED_HEIGHT / 8)) 
@@ -100,7 +85,7 @@ static esp_err_t drv_sh1106_write_char(uint8_t x, uint8_t y, char c)
     const uint8_t *font_data = font8x8_basic_tr[(uint8_t)c];
 
     // Write the font data to the OLED using the updated function
-    esp_err_t ret = drv_sh1106_write_data_updated((uint8_t *)font_data, OLED_HEIGHT / 8);
+    esp_err_t ret = drv_sh1106_write_data((uint8_t *)font_data, OLED_HEIGHT / 8);
 
     return ret;
 }
@@ -157,7 +142,7 @@ static esp_err_t drv_sh1106_update_screen(void)
         drv_sh1106_send_command(0x10);        // Set higher column address
 
         uint8_t *page_buffer = &screen_buffer[page * OLED_WIDTH];
-        esp_err_t ret = drv_sh1106_write_data_updated(page_buffer, OLED_WIDTH);
+        esp_err_t ret = drv_sh1106_write_data(page_buffer, OLED_WIDTH);
         if (ret != ESP_OK) return ret;
     }
     return ESP_OK;
@@ -200,7 +185,7 @@ esp_err_t drv_sh1106_clear_screen_updated(void)
         drv_sh1106_send_command(0x10);          // Set higher column address
 
         // Write a full empty buffer for this page
-        drv_sh1106_write_data_updated(empty_buffer, OLED_WIDTH);
+        drv_sh1106_write_data(empty_buffer, OLED_WIDTH);
     }
 
     return ESP_OK;

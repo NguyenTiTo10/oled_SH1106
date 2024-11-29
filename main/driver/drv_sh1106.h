@@ -15,7 +15,6 @@ esp_err_t drv_sh1106_clear_screen(void);
 esp_err_t drv_sh1106_write_string(uint8_t x, uint8_t y, const char *str);
 esp_err_t drv_sh1106_display_image(const uint8_t *image);
 
-esp_err_t drv_sh1106_write_data_updated (uint8_t* data, size_t length);
 esp_err_t drv_sh1106_clear_screen_updated(void);
   
 
