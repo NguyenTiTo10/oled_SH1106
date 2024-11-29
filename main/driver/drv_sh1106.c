@@ -30,12 +30,12 @@ static esp_err_t drv_sh1106_send_command(uint8_t command)
     return (ret == true) ? ESP_OK : ESP_FAIL;
 }
 
-static esp_err_t drv_sh1106_write_data(uint8_t data)
-{
-  bool ret = false;                                     
-  ret = bsp_i2c_write_mem((OLED_I2C_ADDR << 1) | I2C_MASTER_WRITE, DATA_MODE, data);
-  return (ret == true) ? ESP_OK : ESP_FAIL;
-}
+// static esp_err_t drv_sh1106_write_data(uint8_t data)
+// {
+//   bool ret = false;                                     
+//   ret = bsp_i2c_write_mem((OLED_I2C_ADDR << 1) | I2C_MASTER_WRITE, DATA_MODE, data);
+//   return (ret == true) ? ESP_OK : ESP_FAIL;
+// }
 
 esp_err_t drv_sh1106_init(void) 
 {
@@ -70,20 +70,20 @@ esp_err_t drv_sh1106_init(void)
     return ESP_OK;
 }
 
-esp_err_t drv_sh1106_clear_screen(void) 
-{
-    for (uint8_t page = 0; page < (OLED_HEIGHT / 8); page++) 
-    {
-        drv_sh1106_send_command(0xB0 + page); // Set page address
-        drv_sh1106_send_command(0x00); // Set lower column address
-        drv_sh1106_send_command(0x10); // Set higher column address
-        for (uint8_t col = 0; col < OLED_WIDTH; col++) {
-            drv_sh1106_write_data(0x00); // Clear column data
-        }
-    }
+// esp_err_t drv_sh1106_clear_screen(void) 
+// {
+//     for (uint8_t page = 0; page < (OLED_HEIGHT / 8); page++) 
+//     {
+//         drv_sh1106_send_command(0xB0 + page); // Set page address
+//         drv_sh1106_send_command(0x00); // Set lower column address
+//         drv_sh1106_send_command(0x10); // Set higher column address
+//         for (uint8_t col = 0; col < OLED_WIDTH; col++) {
+//             drv_sh1106_write_data(0x00); // Clear column data
+//         }
+//     }
 
-    return ESP_OK;
-}
+//     return ESP_OK;
+// }
 
 static esp_err_t drv_sh1106_write_char(uint8_t x, uint8_t y, char c) 
 {
