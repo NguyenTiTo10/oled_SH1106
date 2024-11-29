@@ -187,3 +187,10 @@ esp_err_t drv_sh1106_turn_off(void)
 
     return ESP_OK;
 }
+
+esp_err_t drv_sh1106_clear_screen_updated (uint8_t* data, size_t length)
+{
+    bool ret = false;                                     
+    ret = bsp_i2c_write_data((OLED_I2C_ADDR << 1) | I2C_MASTER_WRITE, DATA_MODE, data, length);
+    return (ret == true) ? ESP_OK : ESP_FAIL;
+}
