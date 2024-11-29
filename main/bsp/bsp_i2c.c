@@ -26,30 +26,28 @@ bool bsp_i2c_is_device_ready(uint16_t dev_addr)
   return (ret == ESP_OK);
 }
 
-bool bsp_i2c_write_mem(uint16_t dev_addr, uint16_t mem_addr, uint16_t data)
-{
-  cmd = i2c_cmd_link_create();  // Create a new I2C command link
-  if (cmd == NULL) 
-    return false;  // Return false if command link creation failed
+// bool bsp_i2c_write_mem(uint16_t dev_addr, uint16_t mem_addr, uint16_t data)
+// {
+//   cmd = i2c_cmd_link_create();  // Create a new I2C command link
+//   if (cmd == NULL) 
+//     return false;  // Return false if command link creation failed
 
-  // Start the I2C transmission
-  i2c_master_start(cmd);
-  i2c_master_write_byte(cmd, dev_addr, true); // Send device address with WRITE mode
-  i2c_master_write_byte(cmd, mem_addr, true);  // Control byte: Co = 0, D/C# = 0
-  i2c_master_write_byte(cmd, data, true);  // Send the actual command
-  i2c_master_stop(cmd);  // End the I2C transmission
+//   // Start the I2C transmission
+//   i2c_master_start(cmd);
+//   i2c_master_write_byte(cmd, dev_addr, true); // Send device address with WRITE mode
+//   i2c_master_write_byte(cmd, mem_addr, true);  // Control byte: Co = 0, D/C# = 0
+//   i2c_master_write_byte(cmd, data, true);  // Send the actual command
+//   i2c_master_stop(cmd);  // End the I2C transmission
 
-  // Execute the I2C command
-  esp_err_t ret = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, 1000 / portTICK_PERIOD_MS);
+//   // Execute the I2C command
+//   esp_err_t ret = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, 1000 / portTICK_PERIOD_MS);
 
-  // Delete the command link to free memory
-  i2c_cmd_link_delete(cmd);
+//   // Delete the command link to free memory
+//   i2c_cmd_link_delete(cmd);
 
-  // Return true if transaction was successful, false otherwise
-  return (ret == ESP_OK);
-}
-
-
+//   // Return true if transaction was successful, false otherwise
+//   return (ret == ESP_OK);
+// }
 
 
 
@@ -59,7 +57,9 @@ bool bsp_i2c_write_mem(uint16_t dev_addr, uint16_t mem_addr, uint16_t data)
 
 
 
-bool bsp_i2c_write_data(uint16_t dev_addr, uint16_t mem_addr,  uint8_t *data, size_t length)
+
+
+bool bsp_i2c_write_mem(uint16_t dev_addr, uint16_t mem_addr,  uint8_t *data, size_t length)
 {
     if (data == NULL || length == 0) 
       return ESP_ERR_INVALID_ARG;
