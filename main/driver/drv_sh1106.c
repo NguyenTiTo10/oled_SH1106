@@ -108,7 +108,6 @@ static esp_err_t drv_sh1106_write_char(uint8_t x, uint8_t y, char c)
     return ret;
 }
 
-
 esp_err_t drv_sh1106_write_string(uint8_t x, uint8_t y, const char *str) 
 {
     if (!str) 

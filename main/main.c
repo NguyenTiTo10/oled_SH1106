@@ -47,16 +47,21 @@ void app_main(void)
 
     drv_sh1106_clear_screen();
 
-// #define DISPLAY_TEXT
-// #ifdef DISPLAY_TEXT
+#define DISPLAY_TEXT
+#ifdef DISPLAY_TEXT
     // Test displaying text on the OLED
     drv_sh1106_write_string(0, 0, "Hello, ESP-IDF!");
     drv_sh1106_write_string(0, 1, "Multiline OK!");
-    drv_sh1106_write_string(0, 5, "Another line.!");
+    drv_sh1106_write_string(0, 2, "ANOTHER LINE 2");
+    drv_sh1106_write_string(0, 3, "ANOTHER LINE 3");
+    drv_sh1106_write_string(0, 4, "ANOTHER LINE 4");
+    drv_sh1106_write_string(0, 5, "ANOTHER LINE 5");
+    drv_sh1106_write_string(0, 6, "ANOTHER LINE 6");
+    drv_sh1106_write_string(0, 7, "ANOTHER LINE 7");
 
     bsp_delay (3000);
 
-// #else
+#else
     drv_sh1106_display_image(image_logo_uit);
 
     bsp_delay (3000);
@@ -69,10 +74,10 @@ void app_main(void)
 
     bsp_delay (3000);
 
-// #endif
+#endif
 
-    drv_sh1106_clear_screen();
+    // drv_sh1106_clear_screen();
 
-    // drv_sh1106_turn_off();
+    drv_sh1106_turn_off();
 
 }
