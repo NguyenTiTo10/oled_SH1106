@@ -26,16 +26,16 @@ static esp_err_t drv_sh1106_update_screen(void);
 static esp_err_t drv_sh1106_send_command(uint8_t command) 
 {
     bool ret = false;                                     
-    ret = bsp_i2c_write_data((OLED_I2C_ADDR << 1) | I2C_MASTER_WRITE, COMMAND_MODE, &command, 1);
+    ret = bsp_i2c_write_mem((OLED_I2C_ADDR << 1) | I2C_MASTER_WRITE, COMMAND_MODE, &command, 1);
     return (ret == true) ? ESP_OK : ESP_FAIL;
 }
 
-// static esp_err_t drv_sh1106_write_data(uint8_t data)
-// {
-//   bool ret = false;                                     
-//   ret = bsp_i2c_write_mem((OLED_I2C_ADDR << 1) | I2C_MASTER_WRITE, DATA_MODE, data);
-//   return (ret == true) ? ESP_OK : ESP_FAIL;
-// }
+esp_err_t drv_sh1106_write_data_updated (uint8_t* data, size_t length)
+{
+    bool ret = false;                                     
+    ret = bsp_i2c_write_mem((OLED_I2C_ADDR << 1) | I2C_MASTER_WRITE, DATA_MODE, data, length);
+    return (ret == true) ? ESP_OK : ESP_FAIL;
+}
 
 esp_err_t drv_sh1106_init(void) 
 {
@@ -186,13 +186,6 @@ esp_err_t drv_sh1106_turn_off(void)
     drv_sh1106_send_command(0x10); // Disable charge pump
 
     return ESP_OK;
-}
-
-esp_err_t drv_sh1106_write_data_updated (uint8_t* data, size_t length)
-{
-    bool ret = false;                                     
-    ret = bsp_i2c_write_data((OLED_I2C_ADDR << 1) | I2C_MASTER_WRITE, DATA_MODE, data, length);
-    return (ret == true) ? ESP_OK : ESP_FAIL;
 }
 
 esp_err_t drv_sh1106_clear_screen_updated(void) 
