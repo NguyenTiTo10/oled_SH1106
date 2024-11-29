@@ -96,11 +96,6 @@ static esp_err_t drv_sh1106_write_char(uint8_t x, uint8_t y, char c)
     drv_sh1106_send_command(0x00 + (adjusted_x & 0x0F)); // Set lower column address
     drv_sh1106_send_command(0x10 + (adjusted_x >> 4));   // Set higher column address
 
-    // for (int i = 0; i < (OLED_HEIGHT / 8); i++) 
-    // {
-    //     drv_sh1106_write_data(font8x8_basic_tr[(uint8_t)c][i]);
-    // }
-
     // Retrieve the font data for the character
     const uint8_t *font_data = font8x8_basic_tr[(uint8_t)c];
 
@@ -121,7 +116,7 @@ esp_err_t drv_sh1106_write_string(uint8_t x, uint8_t y, const char *str)
     {
         esp_err_t ret = drv_sh1106_write_char(start_x, y, *str++);
         if (ret != ESP_OK)
-            return ret; // Return the error if writing a character fails
+            return ret; 
 
         start_x += 8; // Move to the next character position
         if (start_x >= OLED_WIDTH) 
@@ -130,7 +125,7 @@ esp_err_t drv_sh1106_write_string(uint8_t x, uint8_t y, const char *str)
             start_x = 2; // Reset to adjusted start
             y++;
             if (y >= (OLED_HEIGHT / 8)) 
-                return ESP_ERR_NO_MEM; // Return error if out of vertical bounds
+                return ESP_ERR_NO_MEM; 
         }
     }
 
@@ -160,11 +155,6 @@ static esp_err_t drv_sh1106_update_screen(void)
         drv_sh1106_send_command(0xB0 + page); // Set page address
         drv_sh1106_send_command(0x00);        // Set lower column address
         drv_sh1106_send_command(0x10);        // Set higher column address
-
-        // for (uint8_t col = 0; col < OLED_WIDTH; col++)
-        // {
-        //     drv_sh1106_write_data(screen_buffer[page * OLED_WIDTH + col]);
-        // }
 
         uint8_t *page_buffer = &screen_buffer[page * OLED_WIDTH];
         esp_err_t ret = drv_sh1106_write_data_updated(page_buffer, OLED_WIDTH);
@@ -212,9 +202,9 @@ esp_err_t drv_sh1106_clear_screen_updated(void)
     for (uint8_t page = 0; page < (OLED_HEIGHT / 8); page++) 
     {
         // Set page and column addresses once per page
-        drv_sh1106_send_command(0xB0 + page); // Set page address
-        drv_sh1106_send_command(0x00);       // Set lower column address
-        drv_sh1106_send_command(0x10);       // Set higher column address
+        drv_sh1106_send_command(0xB0 + page);   // Set page address
+        drv_sh1106_send_command(0x00);          // Set lower column address
+        drv_sh1106_send_command(0x10);          // Set higher column address
 
         // Write a full empty buffer for this page
         drv_sh1106_write_data_updated(empty_buffer, OLED_WIDTH);
