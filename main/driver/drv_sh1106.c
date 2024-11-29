@@ -188,9 +188,27 @@ esp_err_t drv_sh1106_turn_off(void)
     return ESP_OK;
 }
 
-esp_err_t drv_sh1106_clear_screen_updated (uint8_t* data, size_t length)
+esp_err_t drv_sh1106_write_data_updated (uint8_t* data, size_t length)
 {
     bool ret = false;                                     
     ret = bsp_i2c_write_data((OLED_I2C_ADDR << 1) | I2C_MASTER_WRITE, DATA_MODE, data, length);
     return (ret == true) ? ESP_OK : ESP_FAIL;
+}
+
+esp_err_t drv_sh1106_clear_screen_updated(void) 
+{
+    static const uint8_t empty_buffer[OLED_WIDTH] = {0x00}; // Predefined empty buffer for one page
+
+    for (uint8_t page = 0; page < (OLED_HEIGHT / 8); page++) 
+    {
+        // Set page and column addresses once per page
+        drv_sh1106_send_command(0xB0 + page); // Set page address
+        drv_sh1106_send_command(0x00);       // Set lower column address
+        drv_sh1106_send_command(0x10);       // Set higher column address
+
+        // Write a full empty buffer for this page
+        drv_sh1106_write_data_block(empty_buffer, OLED_WIDTH);
+    }
+
+    return ESP_OK;
 }
