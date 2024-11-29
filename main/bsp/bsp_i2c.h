@@ -7,5 +7,8 @@
 bool bsp_i2c_is_device_ready(uint16_t dev_addr);
 bool bsp_i2c_write_mem(uint16_t dev_addr, uint16_t mem_addr, uint16_t data);
 
+bool bsp_i2c_write_data(uint16_t dev_addr, uint16_t mem_addr,  uint8_t *data, size_t length);
+
+
 
 #endif

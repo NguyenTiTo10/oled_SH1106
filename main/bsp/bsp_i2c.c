@@ -57,16 +57,15 @@ bool bsp_i2c_write_mem(uint16_t dev_addr, uint16_t mem_addr, uint16_t data)
 
 
 
-#define SH1106_I2C_ADDRESS 0x3C
-#define I2C_PORT I2C_NUM_0 // Change based on your setup
 
-esp_err_t bsp_i2c_write_data(uint16_t dev_addr, uint16_t mem_addr,  uint8_t data, size_t length)
+
+bool bsp_i2c_write_data(uint16_t dev_addr, uint16_t mem_addr,  uint8_t *data, size_t length)
 {
     if (data == NULL || length == 0) 
       return ESP_ERR_INVALID_ARG;
 
     // Create an I2C command link
-    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+    cmd = i2c_cmd_link_create();
     if (cmd == NULL) 
       return ESP_ERR_NO_MEM;
 
@@ -77,10 +76,9 @@ esp_err_t bsp_i2c_write_data(uint16_t dev_addr, uint16_t mem_addr,  uint8_t data
     i2c_master_write(cmd, data, length, true);
     i2c_master_stop(cmd);
 
-    esp_err_t ret = i2c_master_cmd_begin(I2C_PORT, cmd, pdMS_TO_TICKS(1000));
+    esp_err_t ret = i2c_master_cmd_begin(I2C_MASTER_NUM, cmd, pdMS_TO_TICKS(1000));
 
     i2c_cmd_link_delete(cmd);
 
-    return ret;
+    return (ret == ESP_OK);
 }
-                      
