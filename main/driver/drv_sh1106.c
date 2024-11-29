@@ -70,6 +70,24 @@ esp_err_t drv_sh1106_init(void)
     return ESP_OK;
 }
 
+esp_err_t drv_sh1106_clear_screen(void) 
+{
+    uint8_t empty_buffer[OLED_WIDTH] = {0x00}; // Predefined empty buffer for one page
+
+    for (uint8_t page = 0; page < (OLED_HEIGHT / 8); page++) 
+    {
+        // Set page and column addresses once per page
+        drv_sh1106_send_command(0xB0 + page);   // Set page address
+        drv_sh1106_send_command(0x00);          // Set lower column address
+        drv_sh1106_send_command(0x10);          // Set higher column address
+
+        // Write a full empty buffer for this page
+        drv_sh1106_write_data(empty_buffer, OLED_WIDTH);
+    }
+
+    return ESP_OK;
+}
+
 static esp_err_t drv_sh1106_write_char(uint8_t x, uint8_t y, char c) 
 {
     if (x >= OLED_WIDTH || y >= (OLED_HEIGHT / 8)) 
@@ -169,24 +187,6 @@ esp_err_t drv_sh1106_turn_off(void)
     drv_sh1106_send_command(0xAE); // Display OFF
     drv_sh1106_send_command(0x8D); // Charge Pump Setting
     drv_sh1106_send_command(0x10); // Disable charge pump
-
-    return ESP_OK;
-}
-
-esp_err_t drv_sh1106_clear_screen_updated(void) 
-{
-    uint8_t empty_buffer[OLED_WIDTH] = {0x00}; // Predefined empty buffer for one page
-
-    for (uint8_t page = 0; page < (OLED_HEIGHT / 8); page++) 
-    {
-        // Set page and column addresses once per page
-        drv_sh1106_send_command(0xB0 + page);   // Set page address
-        drv_sh1106_send_command(0x00);          // Set lower column address
-        drv_sh1106_send_command(0x10);          // Set higher column address
-
-        // Write a full empty buffer for this page
-        drv_sh1106_write_data(empty_buffer, OLED_WIDTH);
-    }
 
     return ESP_OK;
 }

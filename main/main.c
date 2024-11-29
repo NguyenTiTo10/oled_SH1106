@@ -45,7 +45,7 @@ void app_main(void)
     if (drv_sh1106_init() == ESP_OK)
         printf("Oled SH1106 initialized successfully.\n");
 
-    drv_sh1106_clear_screen_updated();
+    drv_sh1106_clear_screen();
 
 // #define DISPLAY_TEXT
 // #ifdef DISPLAY_TEXT
@@ -61,7 +61,7 @@ void app_main(void)
 
     bsp_delay (3000);
 
-    drv_sh1106_clear_screen_updated();
+    drv_sh1106_clear_screen();
 
     bsp_delay (3000);
 
@@ -71,7 +71,7 @@ void app_main(void)
 
 // #endif
 
-    drv_sh1106_clear_screen_updated();
+    drv_sh1106_clear_screen();
 
     // drv_sh1106_turn_off();
 
