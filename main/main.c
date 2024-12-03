@@ -34,6 +34,42 @@ static esp_err_t i2c_master_init(void)
     return i2c_driver_install(I2C_MASTER_NUM, conf.mode, 0, 0, 0);          
 }
 
+
+static void app_test_oled_sh1106 (void)
+{
+    drv_sh1106_clear_screen();
+
+    // Display Image
+    drv_sh1106_display_image(image_logo_uit);
+
+    bsp_delay (3000);
+
+    drv_sh1106_clear_screen();
+
+
+    // Display text 
+    drv_sh1106_write_string(0, 0, "Hello, ESP-IDF!");
+    drv_sh1106_write_string(0, 1, "Multiline OK!");
+    drv_sh1106_write_string(0, 2, "ANOTHER LINE 2");
+    drv_sh1106_write_string(0, 3, "ANOTHER LINE 3");
+    drv_sh1106_write_string(0, 4, "ANOTHER LINE 4");
+    drv_sh1106_write_string(0, 5, "ANOTHER LINE 5");
+    drv_sh1106_write_string(0, 6, "ANOTHER LINE 6");
+    drv_sh1106_write_string(0, 7, "ANOTHER LINE 7");
+
+    bsp_delay (3000);
+    drv_sh1106_clear_screen();
+
+
+    // Display image
+    drv_sh1106_display_image(image_logo_ce);
+    bsp_delay (3000);
+    drv_sh1106_clear_screen();
+    drv_sh1106_turn_off();
+
+
+}
+
 void app_main(void) 
 {
     // Initialize I2C and the SH1106 OLED display
@@ -45,39 +81,10 @@ void app_main(void)
     if (drv_sh1106_init() == ESP_OK)
         printf("Oled SH1106 initialized successfully.\n");
 
-    drv_sh1106_clear_screen();
+    
 
-#define DISPLAY_TEXT
-#ifdef DISPLAY_TEXT
-    // Test displaying text on the OLED
-    drv_sh1106_write_string(0, 0, "Hello, ESP-IDF!");
-    drv_sh1106_write_string(0, 1, "Multiline OK!");
-    drv_sh1106_write_string(0, 2, "ANOTHER LINE 2");
-    drv_sh1106_write_string(0, 3, "ANOTHER LINE 3");
-    drv_sh1106_write_string(0, 4, "ANOTHER LINE 4");
-    drv_sh1106_write_string(0, 5, "ANOTHER LINE 5");
-    drv_sh1106_write_string(0, 6, "ANOTHER LINE 6");
-    drv_sh1106_write_string(0, 7, "ANOTHER LINE 7");
+    
 
-    bsp_delay (3000);
 
-#else
-    drv_sh1106_display_image(image_logo_uit);
-
-    bsp_delay (3000);
-
-    drv_sh1106_clear_screen();
-
-    bsp_delay (3000);
-
-    drv_sh1106_display_image(image_logo_ce);
-
-    bsp_delay (3000);
-
-#endif
-
-    // drv_sh1106_clear_screen();
-
-    drv_sh1106_turn_off();
 
 }
