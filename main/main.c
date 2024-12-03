@@ -37,15 +37,11 @@ static esp_err_t i2c_master_init(void)
 
 static void app_test_oled_sh1106 (void)
 {
+     // Display Image
     drv_sh1106_clear_screen();
-
-    // Display Image
     drv_sh1106_display_image(image_logo_uit);
-
     bsp_delay (3000);
-
     drv_sh1106_clear_screen();
-
 
     // Display text 
     drv_sh1106_write_string(0, 0, "Hello, ESP-IDF!");
@@ -66,8 +62,6 @@ static void app_test_oled_sh1106 (void)
     bsp_delay (3000);
     drv_sh1106_clear_screen();
     drv_sh1106_turn_off();
-
-
 }
 
 void app_main(void) 
@@ -82,9 +76,9 @@ void app_main(void)
         printf("Oled SH1106 initialized successfully.\n");
 
     
-
+    while (1)
+    {
+        app_test_oled_sh1106();
+    }
     
-
-
-
 }
